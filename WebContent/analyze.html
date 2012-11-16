@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  	<title>Queue log query</title>
+  	<!--Load the AJAX API-->
+  	<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+	
+  	<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui-timepicker-addon.js"></script>
+	<!--noscript type="text/javascript" src="js/timepicker.js"></script-->
+  	<script type="text/javascript" src="base64.js"></script>
+    <script type="text/javascript" src="js/avroconnect_analyze.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/redmond/jquery-ui-1.8.16.custom.css">
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    
+    
+   
+</head>
+<body onLoad="params2code()">
+
+<form name="fields_form">
+<!-- input type="text" size="50" name="addr" value="192.168.169.160:9091" /><br-->
+<table>
+<tr>
+<td valign="top">
+    <div id="chart_div"></div>
+    <div id="chart">      
+    <div id="chart_title">
+    <div><span class="block_title">Title:</span>&nbsp;<input type="text" name="chart_title" size="90" onChange="drawGraph()" /></div>
+    </div>
+        
+</div>
+</td>
+<td valign="top">
+    <!--div class="block">
+    <div id="lom" class="buttondiv"><input id="lom_button" type="button" value="Lomonosov" onClick="setName('lom')"></div>
+    <div id="cheb" class="buttondiv"><input id="cheb_button" type="button" value="Chebyshev" onClick="setName('cheb')"></div>
+    <div id="gra" class="buttondiv"><input id="gra_button" type="button" value="GraphIt!" onClick="setName('gra')"></div>
+    </div-->
+    <script>
+		$(function() {
+				   $("#startdate").datetimepicker({ dateFormat: 'yy/mm/dd', timeFormat: 'hh:mm:ss', showSecond: true,
+				                                onSelect: function(dateText, inst) { 
+				                                  var newtime =  $("#startdate").datetimepicker('getDate');
+				                                  $("#enddate").datetimepicker('setDate', newtime)} });
+				   $("#enddate").datetimepicker({ dateFormat: 'yy/mm/dd', timeFormat: 'hh:mm:ss', showSecond: true, showTime: true });
+				   
+				   
+				   
+		});	
+		
+		// Read a page's GET URL variables and return them as an associative array.
+	
+		
+	</script>
+    <div class="block" id="date_range">
+    <span class="block_title">Select date range <span class="light">(yyyy/mm/dd)</span></span><br>
+    <input type="text" id="startdate" value="start date" onChange="setStartDate()" onFocus="setDates()"><br>
+	<input type="text" id="enddate" value="end date" onChange="setEndDate()" onFocus="setDates()">
+    </div>
+    
+    <div class="block" id="node_list">
+    <span  class="block_title">Nodes list:</span><br>
+        <input type="text" id="nodelist" onChange="setNodeList()">
+    </div>
+        
+    <div id="buttons">
+    </div>
+
+    <div id="submit_div"><input name="send" type="button" value="Submit" onClick="sendRequest()" id="submit_button" title="Send query"></div>
+       <div id="timer"></div>
+
+    <div class="block" id="top_value">
+    <span class="block_title">Number of top elements</span><br>
+	<input type="text" id="ntop" onChange="setTopValue()" onFocus="setTopValue()">
+    </div>
+    
+</td></tr>
+</table>
+<table>
+<tr><td nowrap>
+<span class="block_title">Google query:</span>&nbsp;<input type="text" name="query" value="select *" size="90">&nbsp;&nbsp;&nbsp;<span class="block_title">Columns:</span>&nbsp;<input type="text" name="columns" size="50" value="time_minsec, min_num, avg_num, max_num">
+</td></tr>
+<!--tr><td>
+<div id="submit_div"><input name="send" type="button" value="Submit" onClick="sendRequest()" id="submit_button" title="Send query"></div>
+  <div id="timer"></div>
+</td></tr-->
+<tr><td>	
+<div id="change_chart_div">
+    <div id="change_chart_button_div"><input type='button' onClick='openEditor()' value='Change chart'/></div>
+    <div id="range"><span class="block_title">Range:</span>&nbsp;<input type="text" name="min" size="10" value="0" />-<input type="text" name="max" size="10" value="10" />
+    <input type="button" value="Apply" onClick="reDrawGraph()" /><br>
+    <input type="button" value="Reset range" onClick="resetRange()" />
+    </div>
+ </div> 
+</td></tr>
+</table>
+
+<textarea name="pig" id="pig_text" rows=27 cols=100 onChange="addSystem2Title()">
+%default resdir '/does/not/exist'
+%default cfindic 'cheb_cpu_user'
+%default fstart_node 'node-00-00'
+%default fend_node 'node-00-00'
+%default fnodes 'node-00-00'
+%default fstart_time 1307865600000L
+%default fend_time 1307890800000L
+
+REGISTER hopsa-udfs.jar;
+DEFINE TOLONG hopsa.udfs.TOLONG;
+
+tsr = LOAD 'cassandra://zhopsa/$cfindic' USING CassandraStorage() AS (
+        k:bytearray,    va:{t:(n:bytearray, v:bytearray)});
+ts1 = FOREACH tsr GENERATE k, FLATTEN(va.(n, v));
+ts = FOREACH ts1 GENERATE n AS node, TOLONG(k) AS time, (long)v AS cpu;
+tsf = FILTER ts BY time >= $fstart_time AND time <= $fend_time AND the_node_list;
+g = GROUP tsf BY time;
+bytime = FOREACH g GENERATE group AS time, MIN(tsf.cpu) AS min, AVG(tsf.cpu) AS
+  avg, MAX(tsf.cpu) AS max;
+STORE bytime INTO '$resdir' USING PigStorage(',');
+</textarea>
+
+<div id="svg_link" style="margin-left:910px;"></div>
+<div id="chart_save_restore">
+    <div id="new_div" style="width: 900px; height: 1px;"></div>
+    <div style="padding:10px 0 15px 5px;clear:both;"><span class="block_title">Saving and restoring charts</span></div>
+    <table><tr>
+        <td valign="top">
+        <input type="button" value="Get chart settings" onClick="getChartJSON()" /></td>
+        
+        <td valign="top"><textarea name="snippet" rows=20 cols=50></textarea></td>
+        <td valign="top"><input type="button" value="Restore chart" onClick="chartFromJSON()" /><br>
+        <input type="button" value="New chart" onClick="newChartFromJSON()" /></td>
+    </tr>
+    </table>
+</div>
+</form>
+
+<script>
+  unhideBlock("#date_range");
+</script>
+
+</body>
+</html>

@@ -1,0 +1,12 @@
+pigquery =
+flow1 = group c by int(c.time/(<<interval>>*1000000)) in ib_err_rcv where c.time > <<start:0>> and c.time < <<end:0>> and ( <<nodes:none>> )
+final
+ yield time => int(c.time/1000), val => sum(c.value) / count(c.value), index => 1
+ yield time => int(c.time/1000), val => max(c.value), index => 2
+ yield time => int(c.time/1000), val => min(c.value), index => 3
+end
+
+print(zip;order=time,val,index) flow1
+
+columns = thetime_time, avgin_num, maxin_num, minin_num
+

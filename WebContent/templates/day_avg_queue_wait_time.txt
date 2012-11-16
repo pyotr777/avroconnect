@@ -1,0 +1,30 @@
+pigquery = %default cf 'tasks_<<sys:gra>>'
+%default fstart_time <<start:1>>L
+%default fend_time <<end:1000000000000000>>L
+%default ftp 'tqueued'
+%default resdir '/does/not/exist'
+%default period 86400
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray,
+		va:{t:(n:bytearray, v:bytearray)});
+ts1 = FOREACH tsr {
+	 tr = FILTER va BY n=='tqueued';
+	 wt = FILTER va BY n=='waittime';
+	 ts = FILTER va BY n=='tstart';
+	 q = FILTER va BY n=='queue';
+	 tf = FILTER va BY n=='$ftp';
+	 GENERATE k AS key, FLATTEN(q.v) AS queue, FLATTEN(wt.v) AS waittime,
+		 FLATTEN(tr.v) AS tqueued, FLATTEN(ts.v) AS tstart, FLATTEN(tf.v) AS tfilter;
+};
+ts = FOREACH ts1 GENERATE key, queue, (long)waittime AS waittime, 
+  ((long)tqueued)/$period*$period * 1000L AS day, (long)tstart AS tstart,
+	((long)tfilter) * 1000L AS	tfilter;
+tsf = FILTER ts BY tstart > 0 AND tfilter >= $fstart_time AND tfilter < $fend_time;
+grp = GROUP tsf BY (queue, day);
+daycount = FOREACH grp GENERATE group.queue AS queue, group.day AS day,
+	AVG(tsf.waittime) AS avgwait;
+STORE daycount INTO '$resdir' USING PigStorage(',');
+
+columns=queue, day_date, avgwaittime_num_sec
+
+googlequery= select day, avg(avgwaittime) group by day pivot queue
+

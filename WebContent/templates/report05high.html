@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+<title>Weekly report</title>
+
+<script type="text/javascript" src="/avroconnect/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/avroconnect/js/highcharts.js"></script>
+<script type="text/javascript" src="/avroconnect/js/report-high-m.js"></script>
+
+<link rel="stylesheet" type="text/css" href="/avroconnect/css/styles.css">
+</head>
+
+<body>
+
+<h2>8. Распределение пользователей</h2>
+<h3>по отношению времени ожидания к времени выполнения</h3>
+<div class="toggable">
+<request id="105c" file="avg_user_waittorun~sys_cheb!start_1325376000000!end_today"chart="bar" title="Wait time to run time ratio average by all user jobs on Chebyshev since 01.01.2012" stacking="normal" color="cheb"></request>
+  <request id="30l" file="avg_user_waittorun~sys_lom!start_1325376000000" chart="bar" title="Wait time to run time ratio average by all user jobs on Lomonosov since 01.01.2012" stacking="normal" color="lom"></request>
+  <request id="30g" file="avg_user_waittorun~sys_gra!start_1325376000000" chart="bar" title="Wait time to run time ratio average by all user jobs on GraphIt! since 01.01.2012" stacking="normal" color="gra"></request>
+</div>
+
+</body>
+</html>

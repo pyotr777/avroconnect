@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+<title><<date: >></title>
+<script type="text/javascript" src="/avroconnect/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/avroconnect/js/highcharts.js"></script>
+<script type="text/javascript" src="/avroconnect/js/report_lib.js"></script>
+<script type="text/javascript" src="/avroconnect/js/report.js"></script>
+<script type="text/javascript" src="/avroconnect/js/custom_functions.js"></script>
+<link rel="stylesheet" type="text/css" href="/avroconnect/css/styles.css">
+</head>
+<body>
+<h2>Test report for <<date:00.00.00>></h2>
+<div id="messages"></div>
+<h3>Распределение среднего времени ожидания по очередям за последние <<n:28>> дней</h3>
+<div class="chart_container">
+<request id="010l" file="avgwaittime_nq~sys_lom!start_today-<<n:28>>" chart="Number" title="Average waittime on Lomonosov for last <<n:28>> days" vaxis="waittime (sec)" function="check_waittime" arguments="1000,Lomonosov"></request>
+</div>
+<h3>Среднее время ожидания классов задач по количеству процессоров в основных очередях с начала года</h3>
+<div class="toggable">
+  <request id="104c" file="regular_cpuclass_avgwait~sys_cheb!start_1325376000000!end_today" chart="column"  title="Average wait time in main queue on Chebyshev since 01.01.2012" vaxis="wait time (sec)" color="cheb"  source="txt" descr="true" function="class_waittime" arguments="10000,Chebyshev"></request>
+</div>
+<p></p>
+</body>
+</html>

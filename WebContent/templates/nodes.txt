@@ -1,0 +1,24 @@
+pigquery =
+cpu = group c by int ( c.time /10000000) in cpu_user where c.time > <<start:1329710852000000>>
+ var sum
+ var count
+ var time
+ var min
+ var max
+
+ if c.time < <<end:1329725285000000>> and (<<nodes:0>>)
+   sum = sum + c.value
+   count = count + 1
+   time = int ( c.time /10000000)
+   if max < c.value
+     max = c.value
+   end
+   min=0
+ end
+final
+ yield time => time*10000, num => min, avg => sum / count, max => max
+end
+
+print cpu
+
+columns = time, min, avg, max

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>avroconnect</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  <servlet>
+    <description>Interactive web interface</description>
+    <display-name>Avroconnect</display-name>
+    <servlet-name>Avroconnect</servlet-name>
+    <servlet-class>Avroconnect</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Avroconnect</servlet-name>
+    <url-pattern>/Avroconnect</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <description>Returns pig requests from queries.txt file</description>
+    <display-name>getPigQueries</display-name>
+    <servlet-name>getPigQueries</servlet-name>
+    <servlet-class>getPigQueries</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>getPigQueries</servlet-name>
+    <url-pattern>/getPigQueries</url-pattern>
+  </servlet-mapping>
+
+<servlet>
+    <description>Returns contrents of CSV file</description>
+    <display-name>readCSV</display-name>
+    <servlet-name>readCSV</servlet-name>
+    <servlet-class>readCSV</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>readCSV</servlet-name>
+    <url-pattern>/readCSV</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <description>Create weekly report files</description>
+    <display-name>MakeReport</display-name>
+    <servlet-name>MakeReport</servlet-name>
+    <servlet-class>MakeReport</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MakeReport</servlet-name>
+    <url-pattern>/makereport</url-pattern>
+  </servlet-mapping>
+  
+  
+  <servlet>
+    <description>Check report state (not exist, in process, created)</description>
+    <display-name>checkReport</display-name>
+    <servlet-name>checkReport</servlet-name>
+    <servlet-class>checkReport</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>checkReport</servlet-name>
+    <url-pattern>/checkReport</url-pattern>
+  </servlet-mapping>
+  
+  
+  <servlet>
+    <description>Upload files</description>
+    <display-name>upload_servlet</display-name>
+    <servlet-name>upload_servlet</servlet-name>
+    <servlet-class>upload_servlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>upload_servlet</servlet-name>
+    <url-pattern>/upload_servlet</url-pattern>
+  </servlet-mapping>
+
+</web-app>

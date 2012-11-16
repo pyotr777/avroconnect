@@ -1,0 +1,32 @@
+pigquery = %default cf 'tasks_<<sys:gra>>'
+%default period 86400
+%default fstart_time <<today-7>>L
+%default fend_time <<today>>L
+%default ftp1 'tqueued'
+%default ftp2 'tstart'
+%default resdir '/does/not/exist'
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray, va:{t:(
+n:bytearray, v:bytearray)});
+ts1 = FOREACH tsr {
+u = FILTER va BY n=='user';
+q = FILTER va BY n=='queue';
+tf1 = FILTER va BY n=='$ftp1';
+tf2 = FILTER va BY n=='$ftp2';
+GENERATE k AS key, FLATTEN(q.v) AS queue, FLATTEN(u.v) AS user, 
+FLATTEN(tf1.v) AS time1, FLATTEN(tf2.v) AS time2;
+};
+ts = FOREACH ts1 GENERATE key, queue, user, 1000L*(long)time1 AS time1, 1000L*(long)time2 AS time2;
+tsf1 = FILTER ts BY (time1 >= $fstart_time AND time1 < $fend_time) OR 
+(time2 >= $fstart_time AND time2 < $fend_time);
+tsf = FOREACH tsf1 GENERATE key, queue, user, 
+(time1 >= $fstart_time AND time1 < $fend_time ? time1 : time2) / $period *
+$period AS dayqueued;
+gud = GROUP tsf BY (queue, dayqueued, user);
+guntasks = FOREACH gud GENERATE group.queue AS queue, group.dayqueued AS dayqueued,
+group.user AS user, COUNT(tsf) AS ntasks;
+gd = GROUP guntasks BY (queue, dayqueued);
+dqusers = FOREACH gd GENERATE group.queue AS queue, group.dayqueued * 1000 AS day,
+COUNT(guntasks) AS nqusers;
+STORE dqusers INTO '$resdir' USING PigStorage(',');
+columns= queue, day_date, nqusers_num_users
+googlequery=select day, sum(nqusers) group by day pivot queue

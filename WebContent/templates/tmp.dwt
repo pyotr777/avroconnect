@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- TemplateBeginEditable name="doctitle" -->
+<title>Документ без названия</title>
+<!-- TemplateEndEditable -->
+<!-- TemplateBeginEditable name="head" -->
+<!-- TemplateEndEditable -->
+<style type="text/css"> 
+<!-- 
+body  {
+	font: 100% Verdana, Arial, Helvetica, sans-serif;
+	background: #666666;
+	margin: 0; /* рекомендуется использовать нулевое значение поля и отступа элемента body, чтобы учесть различные настройки по умолчанию для браузеров. */
+	padding: 0;
+	text-align: center; /* выравнивает контейнер по центру в браузерах Internet Explorer 5*. Затем для текста задается по умолчанию выравнивание по левому краю в селекторе #container. */
+	color: #000000;
+}
+
+/* Советы по данному гибридному макету
+1. Поскольку размер боковых панелей (в эмах) зависит от размера шрифта, заданного пользователем по умолчанию, необходимо гарантировать, чтобы этот факт учитывался фоновой графикой колонок. При правильном построении такие макеты более удобны для пользователей, которым нужны шрифты более крупных размеров, так как ширина колонок остается пропорциональной. Если для создаваемого макета это нежелательно, просто установите для ширины размер пикселов и обязательно измените соответствующим образом поля в элементе #mainContent.
+2. Поскольку в этом макете размеры боковых колонок основываются на 100% размере шрифта в элементе body, то при уменьшении общего размера текста с помощью свойства font-size (до 80% для элемента body или #container) ширина колонок будет пропорционально уменьшена. Чтобы компенсировать этот эффект, можно увеличить ширину колонок и размер боковых полей элемента #mainContent div.
+3. Если изменить размер шрифта отдельно для каждого элемента div вместо изменения всего макета (то есть элементу #sidebar1 задан размер шрифта 70%, а элементу #mainContent — 85%), пропорционально будет изменен общий размер каждого элемента div. Их размер можно будет настроить в зависимости от окончательного размера шрифта.
+4. Элемент #container div для этого макета не требуется при ширине 100%. Его можно использовать для создания ложных колонок или ограничения ширины макета.
+5. Нет необходимости задавать для элемента #container div ширину 100%, поскольку div в силу своих свойств занимает 100% доступного пространства. Таки образом, если нужно уменьшить размер всего контейнера, чтобы, например, оставить небольшие поля с каждой стороны, он уже доступен для настройки.
+*/
+.thrColHyb #container { 
+	width: 100%;
+	background: #FFFFFF;
+	/*margin: 0 auto;  the auto margins (in conjunction with a width) center the page if needed */
+	text-align: left; /* переопределяет свойство text-align: выравнивание элемента body по центру. */
+} 
+
+/* Советы по элементу sidebar1:
+1. Учтите, что при установке значения font-size для данного элемента div общая ширина элемента div будет изменена соответственно.
+2. Поскольку значения устанавливаются в эмах, не рекомендуется использовать отступ для самой боковой панели. Он будет добавлен к ширине для совместимых со стандартами браузеров, создавая таким образом неизвестную действительную ширину. 
+3. Пространство между краем блока div и элементами внутри него можно создать путем добавления правого и левого полей к этим элементам, как показано в правиле ".thrColHyb #sidebar1 p".
+*/
+.thrColHyb #sidebar1 {
+	float: left; 
+	width: 11em; /* поскольку этот элемент является обтекаемым, необходимо задать ширину. */
+	background: #EBEBEB; /* цвет фона будет отображаться только на отрезке содержимого в колонке, но не дальше. */
+	padding: 15px 0; /* верхний и нижний отступы создают визуальное пространство в этом элементе div. */
+}
+.thrColHyb #sidebar2 {
+	float: right; 
+	width: 11em; /* поскольку этот элемент является обтекаемым, необходимо задать ширину. */
+	background: #EBEBEB; /* цвет фона будет отображаться только на отрезке содержимого в колонке, но не дальше. */
+	padding: 15px 0; /* верхний и нижний отступы создают визуальное пространство в этом элементе div. */
+}
+.thrColHyb #sidebar1 h3, .thrColHyb #sidebar1 p, .thrColHyb #sidebar2 p, .thrColHyb #sidebar2 h3 {
+	margin-left: 10px; /* левое и правое поля нужно задать для каждого элемента, который будет помещен в боковые колонки. */
+	margin-right: 10px;
+}
+
+/* Советы по элементу mainContent:
+1. Если элементу #mainContent div задать значение font-size, отличное от значения элемента #sidebar1 div, поля элемента #mainContent div будут основываться на его свойстве font-size, а ширина элемента #sidebar1 div будет основываться на его свойстве font-size. Значения этих элементов div можно настраивать.
+2. Пространство между элементами mainContent и sidebar1 создается путем добавления левого поля к элементу mainContent div. Пространство этой колонки сохранится, несмотря на объем содержимого элемента sidebar1 div. Это левое поле можно удалить, чтобы текст элемента #mainContent div заполнял пространство #sidebar1, если содержимое элемента #sidebar1 закончится.
+3. Чтобы избежать выпадения потока, может понадобиться протестировать макет и определить приблизительный максимальный размер изображения/элемента, поскольку данный макет основывается на пользовательском размере шрифтов и задаваемых им значениях. Однако, если в браузере пользователя установлен более мелкий шрифт, в действительности же в элементе #mainContent div будет доступно меньше пространства, чем при тестировании.
+4. В условном комментарии к Internet Explorer ниже свойство zoom используется для присвоения элементу mainContent значения "hasLayout". Это позволяет предотвратить несколько специфичных для Internet Explorer ошибок, которые могут возникать.
+*/
+.thrColHyb #mainContent {
+  margin: 0 12em 0 12em; /* правое поле можно задать в эмах или пикселах. Данное значение создает пространство с правой стороны страницы. */
+  padding: 0 2em 0 2em; /* отступ создает пустое пространство внутри блока. */
+} 
+.thrColHyb #mainContent h1 { 
+	/*margin-top: 0;  Though unnecessary while there's a border on the #mainContent div, you may need to uncomment this rule if the borders are removed. This will zero the margins of the first element in the #mainContent div, avoiding margin collapse - a space between divs - in this case it will create unwanted whitespace above the layout. */
+}
+
+/* Прочие классы для повторного использования */
+.fltrt { /* этот класс можно использовать для обтекания элемента справа на странице. Обтекаемый элемент должен предшествовать элементу, рядом с которым он должен размещаться на странице. */
+	float: right;
+	margin-left: 8px;
+}
+.fltlft { /* этот класс можно использовать для обтекания элемента слева на странице. */
+	float: left;
+	margin-right: 8px;
+}
+.clearfloat { /* этот класс нужно применять к элементу div или break; он должен быть последним элементом перед концом контейнера, который должен полностью вмещать поток. */
+	clear:both;
+    height:0;
+    font-size: 1px;
+    line-height: 0px;
+}
+--> 
+</style><!--[if IE]> <style type="text/css">  /* поместите в этом условном комментарии исправления CSS для всех версий браузера Internet Explorer. */ .thrColHyb #sidebar1, .thrColHyb #sidebar2 { padding-top: 30px; } .thrColHyb #mainContent { zoom: 1; padding-top: 15px; } /* указанное выше собственное свойство zoom задает для браузера Internet Explorer значение "hasLayout", необходимое для предотвращения нескольких ошибок. */ </style> <![endif]--></head>
+
+<body class="thrColHyb">
+
+<div id="container">
+  <div id="sidebar1">
+    <h3>Содержимое боковой панели1</h3>
+    <p>Цвет фона </p>
+    
+  <!-- end #sidebar1 --></div>
+  <div id="sidebar2">
+    <h3>Содержимое боковой панели2</h3>
+    <p>Цвет фона в . </p>
+    
+  <!-- end #sidebar2 --></div>
+  <div id="mainContent">
+    <h1> Основное содержимое </h1>
+    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Praesent aliquam,  justo convallis luctus rutrum, erat nulla fermentum diam, at nonummy quam  ante ac quam. Maecenas urna purus, fermentum id, molestie in, commodo  porttitor, felis. Nam blandit quam ut lacus. </p>
+    <p>Quisque ornare risus quis  ligula. Phasellus tristique purus a augue condimentum adipiscing. Aenean  sagittis. Etiam leo pede, rhoncus venenatis, tristique in, vulputate at,  odio. Donec et ipsum et sapien vehicula nonummy. Suspendisse potenti. Fusce  varius urna id quam. Sed neque mi, varius eget, tincidunt nec, suscipit id,  libero. </p>
+    <h2>Заголовок второго уровня </h2>
+    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Praesent aliquam,  justo convallis luctus rutrum, erat nulla fermentum diam, at nonummy quam  ante ac quam. Maecenas urna purus, fermentum id, molestie in, commodo  porttitor, felis. Nam blandit quam ut lacus. Quisque ornare risus quis  ligula. Phasellus tristique purus a augue condimentum adipiscing. Aenean  sagittis. Etiam leo pede, rhoncus venenatis, tristique in, vulputate at, odio.</p>
+	<!-- end #mainContent --></div>
+	<!-- This clearing element should immediately follow the #mainContent div in order to force the #container div to contain all child floats --><br class="clearfloat" /> <!-- end #container --></div>
+</body>
+</html>

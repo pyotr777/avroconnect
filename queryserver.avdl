@@ -1,0 +1,5 @@
+@namespace("hopsa")
+
+protocol QueryServer {
+				 string doStringQuery(string query, map<string, string> pars);
+}

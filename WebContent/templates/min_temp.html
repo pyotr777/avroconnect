@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Информация о задаче № ***</title>
+<script type="text/javascript" src="/avroconnect/js/jquery.js"></script>
+<script type="text/javascript" src="/avroconnect/js/highcharts.js"></script>
+<script type="text/javascript" src="/avroconnect/js/report-high.js"></script>
+<link rel="stylesheet" type="text/css" href="/avroconnect/css/styles.css">
+<style>
+.tab {
+	border-spacing: 120px 0;
+	vertical-align: top;
+	width: 100%;
+	
+}
+
+.first_td {
+	text-align: center;
+	padding: 10px 0 10px 0;
+}
+
+.feats {
+	display: block;
+}
+</style>
+<script type='text/javascript'>
+
+</script>
+</head>
+
+<body>
+<div align='center'><h1>Информация о задаче №  *** пользователя ***</h1></div>
+
+<table class='tab'>
+<tr><td width='40%' style='vertical-align: top;'>
+<table>
+<tr><td colspan=2 class='first_td'><b>Интегральная информация о свойствах задачи</b></td></tr>
+<tr><td>Средняя загрузка ядра:</td><td id='avg_core'></td></tr>
+<tr><td>Средняя загрузка сети Ethernet:</td><td id='avg_eth'></td></tr>
+<tr><td>Средняя загрузка сети Infiniband:</td><td id='avg_ib'></td></tr>
+<tr><td>Средний размер использованного свопа:</td><td id='avg_swap'></td></tr>
+</table>
+</td>
+<!--
+<td  align='right' style='vertical-align: top;'>
+<table>
+<tr><td colspan=4 class='first_td'><b>Информация о запуске</b></td></tr>
+<tr><td colspan=2>Строка запуска:</td><td colspan=2><<cmd:unknown>></td></tr>
+<tr><td>Номера узлов:</td><td> <<nodesstr:none>></td><td>Число ядер:</td><td><<np:unknown>></td></tr>
+<tr><td>Дата запуска:</td><td> <<startstr:none>></td><td>Дата постановки в очередь:</td><td><<queuedstr:unknown>></td></tr>
+<tr><td>Дата окончания счета:</td><td> <<endstr:none>></td><td>Время ожидания:</td><td><<waitstr:unknown>></td></tr>
+<tr><td>Количество процессорочасов(ядра*часы):</td><td> <<cpuhours:unknown>></td><td>Время счета:</td><td><<runstr:unknown>></td></tr>
+</table>
+</td> !-->
+<td style='vertical-align: top;'>
+<table width='100%'>
+<tr><td class='first_td'><b>Найденные признаки неэффективности</b></td></tr>
+<tr id='f1' class='feats'><td>- Средняя загрузка процессора (<***%) меньше установленного порога в <span></span>%.</td></tr>
+<tr id='f2' class='feats'><td>- Средний объем передаваемых/полученных данных по Eth/IB (***%) больше установленного порога в <span></span> MB/s.</td></tr>
+<tr id='f3' class='feats'><td>- Средний размер передаваемых/полученных пакетов по Eth/IB (***KB) меньше/больше установленного порога в <span></span> MB.</td></tr>
+<tr id='f4' class='feats'><td>- Использование свопа.</td></tr>
+<tr id='f5' class='feats'><td>- Найдены ошибки SMART.</td></tr>
+</table>
+<br>
+<form name='form1' action='' method='post'>
+<table width='100%'  style='font-size: smaller;'>
+<tr><td colspan=4 class='first_td'><b>Пороги для поиска признаков неэффективности</b></td></tr>
+<tr><td><input type='checkbox'> Загрузка процессора < <input type='text' size='3' value='20'> %.</td></tr>
+<tr><td><input type='checkbox'> Средний объем передаваемых/полученных данных по Eth/IB > <input type='text' size='5' value='500'> МБ/сек.</td></tr>
+<tr><td><input type='checkbox'> Средний размер передаваемых/полученных пакетов по Eth/IB > <input type='text' size='4' value='1'> МБ.</td></tr>
+<tr><td><input type='checkbox'> Использование свопа.</td></tr>
+<tr><td><input type='checkbox'> Найдены ошибки SMART.</td></tr>
+<tr><td><input type='submit' value='Изменить параметры'></input></td></tr>
+</form>
+</table>
+</td>
+</tr>
+</table>
+<br><br>
+<!--<div class='div_req'><request id="full_cpu_request" file="analyze_агдд_cpu_tpl8~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред,макс,мин" chart="column" color="bright"
+ title="Загрузка процессора в %"  /></div>!-->
+ <div class='div_req'><request id="cpu_request" file="analyze_cpu_tpl8~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред,макс,мин" chart="line" color="bright" theme="yes" title="Загрузка процессора в %"  /></div>
+ 
+ <div class='div_req'><request id="eth_err_request" file="analyze_ext_eth_err~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред_получ,макс_получ,мин_получ,сред_перед,макс_перед,мин_перед" chart="line" color="bright" theme="yes" title="Число ошибок в сети Ethernet (ошибок/сек)" /></div>
+ 
+</body>
+</html>

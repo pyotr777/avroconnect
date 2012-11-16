@@ -1,0 +1,36 @@
+pigquery=%default cf 'tasks_<<sys:cheb>>'
+%default fstart_time <<start:1000>>L
+%default fend_time <<end:1000000000000000>>L
+%default timefun 'SDAYMS'
+%default ftp 'tstart'
+%default resdir '/does/not/exist'
+REGISTER hopsa-udfs.jar;
+DEFINE SDAYMS hopsa.udfs.SDAYMS;
+DEFINE SHOUR hopsa.udfs.SHOUR;
+DEFINE SWDAY1 hopsa.udfs.SWDAY1;
+DEFINE SMONTH hopsa.udfs.SMONTH;
+
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray, va:{t:(
+		n:bytearray, v:bytearray)});
+ts1 = FOREACH tsr {
+	 nc = FILTER va BY n=='ncpus';
+	 tf = FILTER va BY n=='$ftp';
+	 GENERATE k AS key, FLATTEN(nc.v) AS ncpus, FLATTEN(tf.v) AS tfilter;
+};
+ts = FOREACH ts1 GENERATE key, (long)ncpus,	(long)tfilter;
+tsf = FILTER ts BY tfilter >= $fstart_time/1000L AND tfilter < $fend_time/1000L;
+tsa = FOREACH tsf GENERATE key, $timefun(tfilter) AS time,
+	(ncpus <= 8 ? '1-8' :
+	(ncpus <= 16 ? '9-16' :
+	(ncpus <= 32 ? '17-32' :
+	(ncpus <= 64 ? '33-64' :
+	(ncpus <= 128 ? '65-128' :
+	(ncpus <= 512 ? '129-512' : '513+')))))) AS cpuclass;
+g = GROUP tsa BY (cpuclass, time);
+res = FOREACH g GENERATE group.cpuclass AS cpuclass, group.time AS time,
+	COUNT(tsa) AS ntasks;
+STORE res INTO '$resdir' USING PigStorage(',');
+
+columns=cpuclass, day_date, ntasks_num
+
+googlequery=select day, avg(ntasks) group by day pivot cpuclass

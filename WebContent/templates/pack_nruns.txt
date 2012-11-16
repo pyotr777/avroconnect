@@ -1,0 +1,28 @@
+pigquery = %default cf 'tasks_<<sys:gra>>'
+%default fstart_time <<start:1>>L
+%default fend_time <<end:1000000000000000>>L
+%default ftp 'tstart'
+%default resdir '/does/not/exist'
+
+REGISTER 'hopsa-udfs.jar';
+
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray, va:{t:(
+		n:bytearray, v:bytearray)});
+ts1 = FOREACH tsr {
+	 un = FILTER va BY n=='user';
+	 cl = FILTER va BY n=='cmdline';
+	 tf = FILTER va BY n=='$ftp';
+	 GENERATE k AS key, FLATTEN(un.v) AS user, FLATTEN(cl.v) AS cmdline,
+		 FLATTEN(tf.v) AS tfilter;
+};
+ts = FOREACH ts1 GENERATE key, user,
+	REGEX_EXTRACT(cmdline, '/?([-~._a-zA-Z0-9]*/)*([-~._a-zA-Z0-9]+)', 2) AS pack,
+	((long)tfilter) * 1000L AS tfilter;
+tsf = FILTER ts BY tfilter >= $fstart_time AND tfilter < $fend_time;
+grp = GROUP tsf BY pack;
+packs = FOREACH grp GENERATE group AS pack, COUNT(tsf) AS nuses;
+STORE packs INTO '$resdir' USING PigStorage(',');
+
+columns=package, nruns_num
+
+googlequery = select package, nruns order by (1-nruns) limit 30

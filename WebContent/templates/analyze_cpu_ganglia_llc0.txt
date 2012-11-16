@@ -1,0 +1,30 @@
+pigquery =
+flow1 = each c in CPU0_LLC_MISSES_ganglia where c.time > <<start:0>> and c.time < <<end:0>> and ( <<nodes:none>> )
+ yield time => int(c.time/1000), val => c.value, index => 1
+end
+
+flow2 = each c in CPU1_LLC_MISSES_ganglia where c.time > <<start:0>> and c.time < <<end:0>> and ( <<nodes:none>> )
+ yield time => int(c.time/1000), val => c.value, index => 2
+end
+flow3 = each c in CPU2_LLC_MISSES_ganglia where c.time > <<start:0>> and c.time < <<end:0>> and ( <<nodes:none>> )
+ yield time => int(c.time/1000), val => c.value, index => 3
+end
+flow4 = each c in CPU3_LLC_MISSES_ganglia where c.time > <<start:0>> and c.time < <<end:0>> and ( <<nodes:none>> )
+ yield time => int(c.time/1000), val => c.value, index => 4
+end
+flow5 = each c in CPU4_LLC_MISSES_ganglia where c.time > <<start:0>> and c.time < <<end:0>> and ( <<nodes:none>> )
+ yield time => int(c.time/1000), val => c.value, index => 5
+end
+flow6 = each c in CPU5_LLC_MISSES_ganglia where c.time > <<start:0>> and c.time < <<end:0>> and ( <<nodes:none>> )
+ yield time => int(c.time/1000), val => c.value, index => 6
+end
+flow7 = each c in CPU6_LLC_MISSES_ganglia where c.time > <<start:0>> and c.time < <<end:0>> and ( <<nodes:none>> )
+ yield time => int(c.time/1000), val => c.value, index => 7
+end
+flow8 = each c in CPU7_LLC_MISSES_ganglia where c.time > <<start:0>> and c.time < <<end:0>> and ( <<nodes:none>> )
+ yield time => int(c.time/1000), val => c.value, index => 8
+end
+print(zip;order=time,val,speed,index) flow1,flow2,flow3,flow4,flow5,flow6,flow7,flow8
+
+columns = thetime_datetime, bytes_num, index_num
+

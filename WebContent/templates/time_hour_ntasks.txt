@@ -1,0 +1,28 @@
+pigquery=%default cf 'tasks_<<sys:gra>>'
+%default fstart_time <<start:1>>L
+%default fend_time <<end:1000000000000000>>L
+%default ftp 'tstart'
+%default min_time 7200
+%default max_time 259200
+%default time_step 3600
+%default resdir '/does/not/exist'
+REGISTER hopsa-udfs.jar;
+
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray, va:{t:(
+		n:bytearray, v:bytearray)});
+ts1 = FOREACH tsr {
+	 tf = FILTER va BY n=='$ftp';
+	 rt = FILTER va BY n=='runtime';
+	 GENERATE k AS key, FLATTEN(tf.v) AS tfilter, FLATTEN(rt.v) AS runtime;
+};
+ts = FOREACH ts1 GENERATE key, (long)runtime,	(long)tfilter;
+tsf = FILTER ts BY tfilter >= $fstart_time/1000L AND tfilter < $fend_time/1000L
+		AND runtime > 0 AND runtime <= $max_time AND runtime > $min_time;
+tsc = FOREACH tsf GENERATE key,
+	(runtime / $time_step + (runtime % $time_step > 0 ? 1 : 0)) * $time_step / 3600 AS timeclass;
+g = GROUP tsc BY timeclass;
+res = FOREACH g GENERATE group AS timeclass, COUNT(tsc) AS ntasks; 
+
+STORE res INTO '$resdir' USING PigStorage(',');
+
+columns=timeclass_num_hour, ntasks_num

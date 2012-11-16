@@ -1,0 +1,60 @@
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Upload</title>
+
+</head>
+<body>
+<form name="uploader" enctype="mulipart/form-data" action="/avroconnect/upload_servlet" method="POST">
+Folder: <input type="text" size="70" name="dir" value=""><br>
+File: &nbsp; <input type="file" id="upload_file" name="file_contents" size="90" style="margin-left:10px;" />
+<input type="submit" name="upload" value="Upload" disabled style="margin-left:25px;width:12em;"/>
+<input type="hidden" name="filename" />
+<input type="hidden" name="filebody" />
+</form>
+<div id="list">
+</div>
+<script type="text/javascript">
+// Check for the various File API support.
+if (window.File && window.FileReader && window.FileList && window.Blob) {
+  // Great success! All the File APIs are supported.
+} else {
+  alert('The File APIs are not fully supported in this browser.');
+}
+
+function handleFileSelect(evt) {
+    var files = evt.target.files; // FileList object
+
+    // files is a FileList of File objects. List some properties.
+    var output = [];
+	var file_body;
+	var file_name;	
+    for (var i = 0, f; f = files[i]; i++) {
+		output.push('<li><strong>', f.name, '</strong> (', f.type || 'n/a', ') - ',   f.size,' bytes', '</li>');
+		if (f.name.indexOf("analyze")<0) {
+			alert("Wrong file name");
+			document.uploader.file_contents.value="";
+			document.uploader.upload.disabled = true;
+			document.getElementById('list').innerHTML = "";
+			return;
+		}
+		var reader = new FileReader();
+		reader.onload = function() {
+			file_body = this.result;
+			
+			document.uploader.filebody.value = file_body;
+			document.uploader.upload.disabled = false;
+		}
+		reader.readAsText(f);
+		file_name = f.name;  
+		document.uploader.filename.value = file_name;
+    }
+    document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';	
+  }
+  
+  document.getElementById('upload_file').addEventListener('change', handleFileSelect, false);
+
+</script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+address: cluster.parallel.ru:9091
+timeout: 1200000ms
+header row: false

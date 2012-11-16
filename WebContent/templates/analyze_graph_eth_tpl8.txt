@@ -1,0 +1,19 @@
+pigquery =
+flow1 = group c by int(c.time /(<<interval>>*1000000)) in graph_bytes_out where c.n == 1 and c.time > <<start:0>> and c.time < <<end:0>> and ( <<nodes:none>> )
+final
+ yield time => int(c.time/1000), val => sum(c.speed) / count(c.speed), index => 1
+ yield time => int(c.time/1000), val => max(c.speed), index => 2
+ yield time => int(c.time/1000), val => min(c.speed), index => 3
+end
+
+flow2 = group c by int(c.time /(<<interval>>*1000000)) in graph_bytes_in where c.n == 1 and c.time > <<start:0>> and c.time < <<end:0>> and ( <<nodes:none>> )
+final
+ yield time => int(c.time/1000), val => sum(c.speed) / count(c.speed), index => 4
+ yield time => int(c.time/1000), val => max(c.speed), index => 5
+ yield time => int(c.time/1000), val => min(c.speed), index => 6
+end
+flow3 = sort x in flow1 by x.time
+flow4 = sort x in flow2 by x.time
+print(zip;order=time,val,index) flow3,flow4
+
+columns = thetime_datetime, bytes_num, index_num

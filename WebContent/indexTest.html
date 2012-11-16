@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  	<title>Queue log query</title>
+  	<!--Load the AJAX API-->
+  	<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+	
+  	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>	
+  	<script type="text/javascript" src="base64.js"></script>
+    <script type="text/javascript" src="js/avroconnect.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/redmond/jquery-ui-1.8.17.custom.css">
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+     	
+</head>
+<body>
+<h3 class="pig">Pig &nbsp; &nbsp; <a href="index_a.html"> [Hoplang]</a></h3>
+<form name="fields_form">
+<!-- input type="text" size="50" name="addr" value="192.168.169.160:9091" /><br-->
+<input type="hidden" name="conf" value="config_test">
+<table>
+<tr><td valign="top">
+	<textarea name="pig" rows=27 cols=80 onChange="addSystem2Title()"></textarea>
+</td>
+<td valign="top">
+	<div id="buttons">
+	</div>
+	
+</td>
+<td valign="top">
+	<div class="block">
+    <div id="lom" class="buttondiv"><input id="lom_button" type="button" value="Lomonosov" onClick="setName('lom')"></div>
+	<div id="cheb" class="buttondiv"><input id="cheb_button" type="button" value="Chebyshev" onClick="setName('cheb')"></div>
+	<div id="gra" class="buttondiv"><input id="gra_button" type="button" value="GraphIt!" onClick="setName('gra')"></div>
+    <div id="100k" class="buttondiv"><input id="100k_button" type="button" value="100K" onClick="setName('100k')"></div>
+    </div>
+    <script>
+		$(function() {
+				   $("#startdate").datepicker({ dateFormat: 'dd/mm/yy' });
+				   $("#enddate").datepicker({ dateFormat: 'dd/mm/yy' });
+				   
+		});		
+	</script>
+    <div class="block" id="date_range">
+    <span class="block_title">Select date range <span class="light">(dd/mm/yyyy)</span></span><br>
+    <input type="text" id="startdate" value="start date" onChange="setStartDate()" onFocus="setDates()"><br>
+	<input type="text" id="enddate" value="end date" onChange="setEndDate()" onFocus="setDates()">
+    </div>
+    
+    <div class="block" id="top_value">
+    <span class="block_title">Number of top elements</span><br>
+	<input type="text" id="ntop" onChange="setTopValue()" onFocus="setTopValue()">   
+    </div>
+    
+    <div class="block" id="csv_file">
+    <span class="block_title">Write to csv file</span><br>
+	<input type="text" id="csv">
+    </div>
+    
+    <div class="block" id="debug_csv_file">
+    <span class="block_title">Read result from csv</span><br>
+	<input type="text" id="debugCSV" value="/CSVs/test.csv">
+    </div>
+    
+</td></tr>
+</table>
+<table>
+<tr><td nowrap>
+<span class="block_title"><a href="http://code.google.com/apis/chart/interactive/docs/querylanguage.html" target="_blank">Google query</a>:</span>&nbsp;<input type="text" name="query" value="" size="90">&nbsp;&nbsp;&nbsp;
+<span class="block_title">Columns:</span>&nbsp;<input type="text" name="columns" size="40">
+</td></tr>
+<tr><td>
+<div class="submit_div" nowrap><input name="send" type="button" value="Submit" onClick="sendRequest()" disabled="true" id="submit_button" title="Send query"></div>
+  <div id="timer"></div>
+</td></tr></table>
+
+<div id="chart">      
+    <div id="chart_title">
+    <div><span class="block_title">Title:</span>&nbsp;<input type="text" name="chart_title" size="90" onChange="drawGraph()" /></div>
+    </div>
+    <div id="change_chart_div">
+        <div id="change_chart_button_div"><input type='button' onClick='openEditor()' value='Change chart'/></div>
+        <div id="range"><span class="block_title">Range:</span>&nbsp;<input type="text" name="min" size="10" value="0" />-<input type="text" name="max" size="10" value="10" />
+        <input type="button" value="Apply" onClick="reDrawGraph()" />  <input type="button" value="Reset range" onClick="resetRange()" />
+        </div>
+	</div>     
+    <div id="chart_div"></div>
+</div>
+
+<div id="svg_link"></div>
+<div id="chart_save_restore">
+    <div id="new_div" style="height: 1px;"></div>
+    <div style="padding:10px 0 15px 5px;clear:both;"><span class="block_title">Saving and restoring charts</span></div>
+    <table><tr>
+        <td valign="top">
+        <input type="button" value="Get chart settings" onClick="getChartJSON()" /></td>
+        
+        <td valign="top"><textarea name="snippet" rows=20 cols=50></textarea></td>
+        <td valign="top"><input type="button" value="Restore chart" onClick="chartFromJSON()" /><br>
+        <input type="button" value="New chart" onClick="newChartFromJSON()" /></td>
+    </tr>
+    </table>
+</div>
+</form>
+</body>
+</html>

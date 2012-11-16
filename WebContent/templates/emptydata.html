@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+<title><<date: >> Job batch system weekly report</title>
+<script type="text/javascript" src="/avroconnect/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/avroconnect/js/highcharts.js"></script>
+<script type="text/javascript" src="/avroconnect/js/report-high-m.js"></script>
+<link rel="stylesheet" type="text/css" href="/avroconnect/css/styles.css">
+</head>
+<body>
+<h1>Test report <<date: >></h1>
+
+<h3>Периоды отсутствия данных</h3>
+<div class="toggable">
+  <request id="0c" file="empty_data~sys_cheb!end_today" chart="column" title="No log data periods on Chebyshev" stacking="normal" color="cheb" vaxis="no data period length (sec)"></request>
+  <request id="0l" file="empty_data~sys_lom!end_today" chart="column" title="No log data periods on Lomonosov" stacking="normal" color="lom" vaxis="no data period length (sec)"></request>
+  <request id="0g" file="empty_data~sys_gra!end_today" chart="column" title="No log data periods on GraphIt!" stacking="normal" color="gra" vaxis="no data period length (sec)"></request>
+</div>
+
+<p></p>
+</body>
+</html>

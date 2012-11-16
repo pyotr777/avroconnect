@@ -1,0 +1,286 @@
+@charset "utf-8";
+/* CSS Document */
+
+a {
+	text-decoration:none;
+	color:#0F80C7;
+}
+
+.block {
+	padding:10px;
+	border-bottom:2px solid white;
+	font-size:8pt;
+	background-color:#ddd;
+}
+
+.block_title {
+	font-weight:bold;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:7pt;
+	letter-spacing:1px;
+}
+
+.block_title a {
+	color:black;
+	text-decoration:underline;
+}
+
+body {
+	margin:0 25px 0 25px;
+}
+
+
+#buttons input, .block input {
+	font-size:8pt;
+}
+
+.buttondiv {
+	padding:1px;
+	float:left;
+}
+
+.buttondiv input {
+	height:18pt;
+}
+
+.cell_1 {
+	width:23%;
+	float:left;
+}
+
+.cell_2 {
+	width:32%;
+	float:left;	
+	overflow:hidden;
+}
+
+.cell_3 {
+	width:48%;
+	float:left;
+	padding:10px;
+}
+
+.chart_container {
+	overflow:hidden;
+	width:100%;
+}
+
+h1 {
+	margin-top:0;
+}
+
+h2, h3, h4, h5 {
+	font-family:"Lucida Console", Monaco, monospace;
+}
+
+h3 {
+	font-size:14px;
+	margin:0;
+	padding: 0 25px 0 0px;
+	text-transform:uppercase;
+}
+
+h3 a {
+	text-transform:none;
+	font-weight:100;
+}
+
+h4 {
+	font-size:12px;
+	padding:0;
+	margin:5px 0 0 0;
+}
+
+h4.filename {
+	font-weight:100;
+	color:#BBB;	
+	top:-2px;
+	position:relative;
+	margin-right:10px;
+}
+.hoplang {
+	background-color:#FFCABC;
+}
+
+.invalid {
+	background-color:#FFFF80;
+	
+}
+
+.light {
+	font-weight:100;
+}
+
+.pig {
+	background-color:#FFC;
+}
+
+.selected {
+	background-color:#FC3;
+}
+
+.ui-widget {
+	font-size:9px;
+}
+
+#date_range, #top_value {
+	display:none;
+}
+
+#chart {
+}
+
+#chart_div {
+	overflow:auto;
+	clear:both;
+	height:800px;
+}
+
+#chart_title {
+	height:50px;
+	float:left;
+}
+
+
+#change_chart_div {		
+	float:left;
+	margin-left:10px;
+}
+
+#change_chart_button_div {
+	background-color:#84C1FF;
+	padding:10px;	
+	margin-bottom:10px;
+	margin-left:25px;
+}
+
+
+#chart_save_restore {
+	background-color:#eee;
+}
+
+#clear_button {
+	padding:10px;
+	background-color:#059;
+}
+
+.pie_container {
+	min-height:300px;
+}
+
+div#range {
+	float:left;
+	padding-left:0px;
+	margin-left:25px;
+}
+
+.submit_div {
+	 background-color:#a00;
+	 padding:10px 25px 10px 25px;
+	 float:left;
+	 text-align:center;
+	 vertical-align:middle;
+}
+
+#submit_button, #submit_button_hoplang {
+	width:100px;
+}
+
+#svg_link {
+	background-color:#84C1FF;
+	padding:10px;
+}
+
+#svg_link a {
+	font-family:Arial, Helvetica, sans-serif;
+	text-decoration:none;
+	color:white;
+}
+
+#timer {
+	width:100px;
+	float:left;
+	margin-left:50px;
+	margin-top:0;
+	padding-top:10px;
+	font-family:sans-serif;
+	font-size:150%;
+	clear:right;
+	vertical-align:middle;
+}
+
+#wait_me {
+	margin-left:255px;
+	margin-top:25px;
+}
+
+
+/* timepicker addons */
+.ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
+.ui-timepicker-div dl { text-align: left; }
+.ui-timepicker-div dl dt { height: 25px; margin-bottom: -25px; }
+.ui-timepicker-div dl dd { margin: 0 10px 10px 65px; }
+.ui-timepicker-div td { font-size: 90%; }
+.ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
+
+
+/*      tabs      */
+
+/* root element for tabs  */
+ul.tabs {  
+	margin:0 !important; 
+	padding:0;
+	height:30px;
+	border-bottom:1px solid #666;	 	
+}
+
+/* single tab */
+ul.tabs li {  
+	float:left;	 
+	padding:0; 
+	margin:0;  
+	list-style-type:none;	
+}
+
+/* link inside the tab. uses a background image */
+ul.tabs a { 
+	float:left;
+	font-size:13px;
+	display:block;
+	padding:5px 30px;	
+	text-decoration:none;
+	border:1px solid #666;	
+	border-bottom:0px;
+	height:18px;
+	background-color:#efefef;
+	color:#777;
+	margin-right:2px;
+	position:relative;
+	top:1px;	
+	outline:0;
+	-moz-border-radius:4px 4px 0 0;	
+}
+
+ul.tabs a:hover {
+	background-color:#F7F7F7;
+	color:#333;
+}
+	
+/* selected tab */
+ul.tabs a.current {
+	background-color:#ddd;
+	border-bottom:1px solid #ddd;	
+	color:#000;	
+	cursor:default;
+}
+
+	
+/* tab pane */
+.panes div {
+	display:none;
+	border:1px solid #666;
+	border-width:0 1px 1px 1px;
+	min-height:150px;
+	padding:15px 20px;
+	background-color:#ddd;	
+}

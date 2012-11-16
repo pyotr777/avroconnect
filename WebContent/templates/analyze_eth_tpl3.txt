@@ -1,0 +1,13 @@
+pigquery =
+flow1 = group c by int ( c.time /10000000) in bytes_out where c.time > <<start:0>> and c.time < <<end:0>> and ( <<nodes:none>> )
+final
+ yield time => int(c.time/1000), avg_in => sum(c.value) / count(c.value), max_in => max(c.value), min_in=>min(c.value)
+end
+
+flow2 = group c by int ( c.time /10000000) in bytes_in where c.time > <<start:0>> and c.time < <<end:0>> and ( <<nodes:none>> )
+final
+ yield time => int(c.time/1000), avg_out => sum(c.value) / count(c.value), max_out => max(c.value), min_out=>min(c.value)
+end
+print(zip;order=time,avg_in,max_in,min_in,avg_out,max_out,min_out) flow1,flow2
+
+columns = thetime_time, avgin_num, maxin_num, minin_num, avgout_num, maxout_num, minout_num

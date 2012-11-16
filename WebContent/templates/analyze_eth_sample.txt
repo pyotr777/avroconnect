@@ -1,0 +1,16 @@
+pigquery =
+flow1 = group c by int(c.time /(163*1000000)) in bytes_out where c.n == 0 and c.time > 1337636187000000 and c.time < 1337799374000000 and (  c.node == 'node-54-01' )
+final
+ yield time => int(c.time/1000), val => sum(c.speed) / count(c.speed), index => 1
+ yield time => int(c.time/1000), val => max(c.speed), index => 2
+ yield time => int(c.time/1000), val => min(c.speed), index => 3
+end
+flow2 = group c by int(c.time /(163*1000000)) in bytes_in where c.n == 0 and c.time > 1337636187000000 and c.time < 1337799374000000 and (  c.node == 'node-54-01' )
+final
+ yield time => int(c.time/1000), val => sum(c.speed) / count(c.speed), index => 4
+ yield time => int(c.time/1000), val => max(c.speed), index => 5
+ yield time => int(c.time/1000), val => min(c.speed), index => 6
+end
+print(zip;order=time,val,index) flow1,flow2
+
+columns = thetime_datetime, bytes_num, column_num

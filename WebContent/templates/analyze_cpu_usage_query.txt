@@ -1,0 +1,22 @@
+pigquery = %default resdir '/does/not/exist'
+%default cfindic 'cheb_cpu_user'
+%default fstart_time <<start:1324929600000>>L
+%default fend_time <<end:1324929600000>>L
+
+REGISTER hopsa-udfs.jar;
+DEFINE TOLONG hopsa.udfs.TOLONG;
+
+tsr = LOAD 'cassandra://zhopsa/$cfindic' USING CassandraStorage() AS (
+        k:bytearray,    va:{t:(n:bytearray, v:bytearray)});
+ts1 = FOREACH tsr GENERATE k, FLATTEN(va.(n, v));
+ts = FOREACH ts1 GENERATE n AS node, TOLONG(k) AS time, (long)v AS cpu;
+tsf = FILTER ts BY time >= $fstart_time AND time <= $fend_time AND <<thenodelist:none>>;
+g = GROUP tsf BY time;
+bytime = FOREACH g GENERATE group AS time, MIN(tsf.cpu) AS min, AVG(tsf.cpu) AS
+  avg, MAX(tsf.cpu) AS max;
+STORE bytime INTO '$resdir' USING PigStorage(',');
+
+
+columns= time_datetime, min_num, avg_num, max_num
+
+googlequery=

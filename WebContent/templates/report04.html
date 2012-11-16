@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Weekly report - Users</title>
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>	
+<script type="text/javascript" src="/avroconnect/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/avroconnect/js/report.js"></script>
+<link rel="stylesheet" type="text/css" href="/avroconnect/css/styles.css">
+</head>
+
+<body>
+<h1>Weekly report</h1>
+
+<h3>распределение среднего времени ожидания по очередям за последние 7 дней</h3>
+
+<h4 class="filename" id="request01"></h4>
+<div><request id="01" file="day_avg_queue_wait_time~sys_cheb!start_today-7" chart="ColumnChart" title="Average waittime in queues on Chebyshev for last 7 days" isStacked="true" strictFirstColumnType="false"  color="cheb" vaxis="waittime (sec)"/></div>
+
+<h4 class="filename" id="request03"></h4>
+<div><request id="03" file="day_avg_queue_wait_time~sys_lom!start_today-7" chart="ColumnChart" title="Average waittime in queues on Lomonosov for last 7 days" isStacked="true" strictFirstColumnType="false" color="lom"  vaxis="waittime (sec)"/></div>
+
+<h4 class="filename" id="request05"></h4>
+<div><request id="05" file="day_avg_queue_wait_time~sys_gra!start_today-7" chart="ColumnChart" title="Average waittime in queues on GraphIt! for last 7 days" isStacked="true" strictFirstColumnType="false" color="gra"  vaxis="waittime (sec)"/></div>
+
+
+
+<h3>распределение времени ожидания всех задач по дням недели с начала года</h3>
+<h4 class="filename" id="request07"></h4>
+<div><request id="07" file="day_avg_wait_time_wdays~sys_cheb" chart="ColumnChart" title="Average wait time on week days on Chebyshev since 01.01.2012" color="cheb" isStacked="true" useFirstColumnAsDomain="true" hasLabelsColumn="true" vaxis="waittime (sec)"/></div>
+
+<h4 class="filename" id="request08"></h4>
+<div>
+<request id="08" file="day_avg_wait_time_wdays~sys_lom" chart="ColumnChart" title="Average wait time on week days on Lomonosov since 01.01.2012" color="lom" vaxis="waittime (sec)" isStacked="true" useFirstColumnAsDomain="true" hasLabelsColumn="true"/></div>
+
+<h4 class="filename" id="request09"></h4>
+<div class="chart_container"><request id="09" file="day_avg_wait_time_wdays~sys_gra" chart="ColumnChart" title="Average wait time on week days on GraphIt! since 01.01.2012" color="gra" vaxis="waittime (sec)" isStacked="true" useFirstColumnAsDomain="true" hasLabelsColumn="true"/></div>
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+pigquery = 
+REGISTER hopsa-udfs.jar;
+%default cf 'tasks_<<sys:gra>>'
+%default fstart_time <<start:1>>L
+%default fend_time <<end:1000000000000000>>L
+%default ftp 'tstart'
+%default resdir '/does/not/exist'
+DEFINE SMONTH hopsa.udfs.SMONTH;
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray, va:{t:(
+		n:bytearray, v:bytearray)});
+ts1 = FOREACH tsr {
+	 u = FILTER va BY n=='user';
+	 ts = FILTER va BY n=='tstart';
+	 rt = FILTER va BY n=='runtime';
+	 GENERATE k AS key, FLATTEN(u.v) AS user, FLATTEN(ts.v) AS tstart,
+		 FLATTEN(rt.v) AS runtime;
+};
+ts = FOREACH ts1 GENERATE key, user, ((long)tstart)*1000L AS tstart,
+	SMONTH((long)tstart) AS month, ((long)runtime)*1000L AS runtime;
+tsf = FILTER ts BY tstart <= $fend_time AND tstart >= $fstart_time;
+gmu = GROUP tsf BY (month, user);
+mu = FOREACH gmu GENERATE group.month AS month, group.user AS user;
+gm = GROUP mu BY month;
+mnu = FOREACH gm GENERATE group AS month, COUNT(mu) AS nusers;
+STORE mnu INTO '$resdir' USING PigStorage(',');
+
+columns = month_num, nusers_num

@@ -1,0 +1,25 @@
+pigquery =
+flow1 = group c by int(c.time/(<<interval>>*1000000)) in cpu_user where c.time > <<start:0>> and c.time < <<end:0>> and ( <<nodes:none>> )
+final
+ yield time => int(c.time/1000), val => sum(c.value) / count(c.value), index => 1
+end
+
+flow2 = group c by int(c.time/(<<interval>>*1000000)) in cpu_user where c.time > <<start:0>> and c.time < <<end:0>> and ( <<nodes:none>> )
+final
+ yield time => int(c.time/1000), val => sum(c.value) / count(c.value), index => 2
+end
+
+flow3 = group c by int(c.time/(<<interval>>*1000000)) in cpu_wio where c.time > <<start:0>> and c.time < <<end:0>> and ( <<nodes:none>> )
+final
+ yield time => int(c.time/1000), val => sum(c.value) / count(c.value), index => 3
+end
+
+flow4 = group c by int(c.time/(<<interval>>*1000000)) in cpu_intr where c.time > <<start:0>> and c.time < <<end:0>> and ( <<nodes:none>> )
+final
+ yield time => int(c.time/1000), val => sum(c.value) / count(c.value), index => 4
+end
+
+print(zip;order=time,val,index) flow1,flow2,flow3,flow4
+
+columns = thetime_time, avg_user, avg_system, avg_iowait, avg_irq
+

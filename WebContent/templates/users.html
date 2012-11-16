@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Weekly report - Users</title>
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>	
+<script type="text/javascript" src="/avroconnect/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/avroconnect/js/report.js"></script>
+<link rel="stylesheet" type="text/css" href="/avroconnect/css/styles.css">
+</head>
+
+<body>
+<h1>Weekly report <<date: >>/ Users statistics</h1>
+
+<h2>3. активность пользователей</h2>
+
+<h3>Число пользователей, чьи задачи запускались за последний день</h3>
+<div class="chart_container">
+	<div class="cell_2"><h4 class="filename" id="29c"></h4>
+    <div><request id="29c" file="nusers_inflight~sys_cheb" chart="Table" title="Number of users, who started jobs on Chebyshev last day" /></div></div>
+    
+    <div class="cell_2"><h4 class="filename" id="29l"></h4>
+    <div><request id="29l" file="nusers_inflight~sys_lom" chart="Table" title="Number of users, who started jobs on Lomonosov last day" /></div></div>
+    
+    <div class="cell_2"><h4 class="filename" id="29g"></h4>
+    <div><request id="29g" file="nusers_inflight~sys_gra" chart="Table" title="Number of users, who started jobs on GraphIt! last day" /></div></div>
+</div>
+
+
+<h3>распределение числа уникальных пользователей, поставивших задачи в очередь, по дням прошедшей недели</h3>
+<h4 class="filename" id="request19c"></h4>
+<div class="chart_container"><request id="19c" file="users_doing_last_week~sys_cheb" chart="ColumnChart" title="Number of users queuing jobs on Chebyshev last 7 days" isStacked="true" strictFirstColumnType="false"/></div>
+
+<h4 class="filename" id="request19l"></h4>
+<div class="chart_container"><request id="19l" file="users_doing_last_week~sys_lom" chart="ColumnChart" title="Number of users queuing jobs on Lomonosov last 7 days" isStacked="true" strictFirstColumnType="false"/></div>
+
+<h4 class="filename" id="request19"></h4>
+<div class="chart_container"><request id="19" file="users_doing_last_week~sys_gra" chart="ColumnChart" title="Number of users queuing jobs on Graphit! last 7 days" isStacked="true" strictFirstColumnType="false" color="gra"/></div>
+
+<h3>распределение числа уникальных пользователей по месяцам с начала года</h3>
+
+<h4 class="filename" id="request20c"></h4>
+<div class="chart_container"><request id="20c" file="users_per_month~sys_cheb!start_1325376000000" chart="ColumnChart" title="Number of users running jobs on Chebyshev per month since 01.01.2012" isStacked="true" hasLabelsColumn="true" color="cheb"/></div>
+
+<h4 class="filename" id="request20l"></h4>
+<div class="chart_container"><request id="20l" file="users_per_month~sys_lom!start_1325376000000" chart="ColumnChart" title="Number of users running jobs on Lomonosov per month since 01.01.2012" hasLabelsColumn="true" isStacked="true" color="lom"/></div>
+
+<h4 class="filename" id="request20g"></h4>
+<div class="chart_container"><request id="20g" file="users_per_month~sys_gra!start_1325376000000" chart="ColumnChart" title="Number of users running jobs on GraphIt! per month since 01.01.2012" hasLabelsColumn="true" isStacked="true" color="gra"/></div>
+
+
+
+<h3>распределение числа уникальных пользователей по времени суток с начала года</h3>
+<h4 class="filename" id="request22c"></h4>
+<div class="chart_container"><request id="22c" file="users_per_hour~sys_cheb!start_1325376000000" chart="ColumnChart" title="Number of users running jobs on Chebyshev per day time (hours) since 01.01.2012" isStacked="true" hasLabelsColumn="true" color="cheb"/></div>
+
+<h4 class="filename" id="request22l"></h4>
+<div class="chart_container"><request id="22l" file="users_per_hour~sys_lom!start_1325376000000" chart="ColumnChart" title="Number of users running jobs on Lomonosov per day time (hours) since 01.01.2012" isStacked="true" hasLabelsColumn="true" color="lom"/></div>
+
+<h4 class="filename" id="request22g"></h4>
+<div class="chart_container"><request id="22g" file="users_per_hour~sys_gra!start_1325376000000" chart="ColumnChart" title="Number of users running jobs on GraphIt! per day time (hours) since 01.01.2012" isStacked="true" hasLabelsColumn="true" color="gra"/></div>
+
+
+<h2>5. Топ50 пользователей</h2>
+<h3>по истраченным процессорочасам за прошедшую неделю, за прошедший месяц, с начала года</h3>
+<div class="chart_container">
+    
+    <div class="cell_2"><h4 class="filename" id="request23c"></h4>
+    <div><request id="23c" file="top_users_CPU_time~sys_cheb!start_today-7!top_25" chart="PieChart" title="Top 25 users by total CPU time on Chebyshev last 7 days" color="cheb"/></div></div>    
+    
+    
+    <div class="cell_2"><h4 class="filename" id="request24c"></h4>
+    <div><request id="24c" file="top_users_CPU_time~sys_cheb!start_today-30!top_25" chart="PieChart" title="Top 25 users by total CPU time on Chebyshev last 30 days" color="cheb"/></div></div>    
+    
+    
+    <div class="cell_2"><h4 class="filename" id="request25c"></h4>
+    <div><request id="25c" file="top_users_CPU_time~sys_cheb!start_1325376000000!top_25" chart="PieChart" title="Top 25 users by total CPU time on Chebyshev since 01.01.2012" color="cheb"/></div></div>    
+</div>
+
+<div class="chart_container">
+    
+    <div class="cell_2"><h4 class="filename" id="request23l"></h4>
+    <div><request id="23l" file="top_users_CPU_time~sys_lom!start_today-7!top_25" chart="PieChart" title="Top 25 users by total CPU time on Lomonosov last 7 days" color="lom"/></div></div>    
+    
+    
+    <div class="cell_2"><h4 class="filename" id="request24l"></h4>
+    <div><request id="24l" file="top_users_CPU_time~sys_lom!start_today-30!top_25" chart="PieChart" title="Top 25 users by total CPU time on Lomonosov last 30 days" color="lom"/></div></div>    
+    
+    <div class="cell_2"><h4 class="filename" id="request25l"></h4>
+    <div><request id="25l" file="top_users_CPU_time~sys_lom!start_1325376000000!top_25" chart="PieChart" title="Top 25 users by total CPU time on Lomonosov since 01.01.2012" color="lom"/></div></div>    
+</div>
+
+<div class="chart_container">
+    
+    <div class="cell_2"><h4 class="filename" id="request23g"></h4>
+    <div><request id="23g" file="top_users_CPU_time~sys_gra!start_today-7!top_25" chart="PieChart" title="Top 25 users by total CPU time on GraphIt! last 7 days" color="gra"/></div></div>    
+    
+    
+    <div class="cell_2"><h4 class="filename" id="request24g"></h4>
+    <div><request id="24g" file="top_users_CPU_time~sys_gra!start_today-30!top_25" chart="PieChart" title="Top 25 users by total CPU time on GraphIt! last 30 days" color="gra"/></div></div>    
+    
+    
+    <div class="cell_2"><h4 class="filename" id="request25g"></h4>
+    <div><request id="25g" file="top_users_CPU_time~sys_gra!start_1325376000000!top_25" chart="PieChart" title="Top 25 users by total CPU time on GraphIt! since 01.01.2012" color="gra"/></div></div>    
+</div>
+
+
+
+<h3>по числу запущенных заданий за прошедшую неделю, за прошедший месяц, с начала года</h3>
+<div class="chart_container">
+    
+    <div class="cell_2"><h4 class="filename" id="request26c"></h4>
+    <div><request id="26c" file="top_users_jobs~sys_cheb!start_today-7!top_25" chart="BarChart" title="Top 25 users by jobs number on Chebyshev last 7 days" color="cheb" logScale="true" /></div></div>    
+    
+    
+    <div class="cell_2"><h4 class="filename" id="request27c"></h4>
+    <div><request id="27c" file="top_users_jobs~sys_cheb!start_today-30!top_25" chart="BarChart" title="Top 25 users by jobs number on Chebyshev last 30 days" color="cheb" logScale="true" /></div></div>    
+    
+    
+    <div class="cell_2"><h4 class="filename" id="request28c"></h4>
+    <div><request id="28c" file="top_users_jobs~sys_cheb!start_1325376000000!top_25" chart="BarChart" title="Top 25 users by jobs number on Chebyshev since 01.01.2012" color="cheb" logScale="true" /></div></div>    
+</div>
+
+<div class="chart_container">
+    
+    <div class="cell_2"><h4 class="filename" id="request26l"></h4>
+    <div><request id="26l" file="top_users_jobs~sys_lom!start_today-7!top_25" chart="BarChart" title="Top 25 users by jobs number on Lomonosov last 7 days" color="lom" logScale="true" /></div></div>    
+    
+    
+    <div class="cell_2"><h4 class="filename" id="request27l"></h4>
+    <div><request id="27l" file="top_users_jobs~sys_lom!start_today-30!top_25" chart="BarChart" title="Top 25 users by jobs number on Lomonosov last 30 days" color="lom logScale="true" "/></div></div>    
+    
+    <div class="cell_2"><h4 class="filename" id="request28l"></h4>
+    <div><request id="28l" file="top_users_jobs~sys_lom!start_1325376000000!top_25" chart="BarChart" title="Top 25 users by jobs number on Lomonosov since 01.01.2012" color="lom" logScale="true" /></div></div>    
+</div>
+
+<div class="chart_container">
+    
+    <div class="cell_2"><h4 class="filename" id="request26g"></h4>
+    <div><request id="26g" file="top_users_jobs~sys_gra!start_today-7!top_25" chart="BarChart" title="Top 25 users by jobs number on GraphIt! last 7 days" color="gra" logScale="true" /></div></div>    
+    
+    
+    <div class="cell_2"><h4 class="filename" id="request27g"></h4>
+    <div><request id="27g" file="top_users_jobs~sys_gra!start_today-30!top_25" chart="BarChart" title="Top 25 users by jobs number on GraphIt! last 30 days" color="gra" logScale="true" /></div></div>    
+    
+    
+    <div class="cell_2"><h4 class="filename" id="request28g"></h4>
+    <div><request id="28g" file="top_users_jobs~sys_gra!start_1325376000000!top_25" chart="BarChart" title="Top 25 users by jobs number on GraphIt! since 01.01.2012" color="gra" logScale="true" /></div></div>    
+</div>
+
+
+<h3>по среднему числу процессоров с начала года</h3>
+    
+<h4 class="filename" id="request29c"></h4>
+<div><request id="29c" file="top_users_avgcpus~sys_cheb!start_1325376000000!top_25" chart="BarChart" title="Top 25 users by average number of CPUs number on Chebyshev since 01.01.2012" color="cheb" logScale="true" /></div></div>    
+
+<h4 class="filename" id="request29l"></h4>
+<div><request id="29l" file="top_users_avgcpus~sys_lom!start_1325376000000!top_25" chart="BarChart" title="Top 25 users by average number of CPUs number on Lomonosov since 01.01.2012" color="lom" logScale="true" /></div></div>    
+
+
+<h4 class="filename" id="request29g"></h4>
+<div><request id="29g" file="top_users_avgcpus~sys_gra!start_1325376000000!top_25" chart="BarChart" title="Top 25 users by average number of CPUs number on GraphIt! since 01.01.2012" color="gra" logScale="true" /></div></div>    
+
+
+
+<h2>8. Распределение пользователей по отношению времени ожидания к времени выполнения </h2>
+
+<h4 class="filename" id="request30c"></h4>
+<div><request id="30c" file="avg_user_runtowait~sys_cheb!start_1325376000000" chart="BarChart" title="Wait time to run time ratio average by all user jobs on Chebyshev since 01.01.2012" isStacked="true" hasLabelsColumn="true" color="cheb"/></div>
+
+<h4 class="filename" id="request30l"></h4>
+<div><request id="30l" file="avg_user_runtowait~sys_lom!start_1325376000000" chart="BarChart" title="Wait time to run time ratio average by all user jobs on Lomonosov since 01.01.2012" isStacked="true" hasLabelsColumn="true" color="lom"/></div>
+
+<h4 class="filename" id="request30g"></h4>
+<div><request id="30g" file="avg_user_runtowait~sys_gra!start_1325376000000" chart="BarChart" title="Wait time to run time ratio average by all user jobs on GraphIt! since 01.01.2012" isStacked="true" hasLabelsColumn="true" color="gra"/></div>
+
+</body>
+</html>

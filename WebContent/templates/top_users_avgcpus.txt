@@ -1,0 +1,32 @@
+pigquery = %default cf 'tasks_<<sys:gra>>'
+%default ntop <<top:15>>
+%default fstart_time 1325376000000L
+%default fend_time <<today>>L
+%default ftp 'tstart'
+%default resp 'avgncpus'
+%default resdir '/does/not/exist'
+
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray, va:{t:(
+		n:bytearray, v:bytearray)});
+ts1 = FOREACH tsr {
+	 u = FILTER va BY n=='user';
+	 ct = FILTER va BY n=='cputime';
+	 nc = FILTER va BY n=='ncpus';
+	 tf = FILTER va BY n=='$ftp';
+	 GENERATE k AS key, FLATTEN(u.v) AS user, FLATTEN(ct.v) AS cputime,
+		 FLATTEN(nc.v) AS ncpus, FLATTEN(tf.v) AS tfilter;
+};
+ts = FOREACH ts1 GENERATE key, user, (long)cputime, (long)ncpus,
+	1000L * (long)tfilter AS tfilter;
+tsf = FILTER ts BY tfilter >= $fstart_time AND tfilter < $fend_time;
+gu = GROUP tsf BY user;
+countu = FOREACH gu GENERATE group AS user, SUM(tsf.cputime) AS cputime,
+	COUNT(tsf) AS ntasks, AVG(tsf.ncpus) AS avgncpus;
+countu2 = FOREACH countu GENERATE user, $resp;
+ordu = ORDER countu2 BY $resp DESC;
+topu = LIMIT ordu $ntop;
+STORE topu INTO '$resdir' USING PigStorage(',');
+
+columns = user, avgCPUs_num
+
+select user, avgCPUs order by avgCPUs 

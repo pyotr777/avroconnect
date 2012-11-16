@@ -1,0 +1,20 @@
+pigquery =
+flow1 = group c by int(c.time/(<<interval>>*1000000)) in graph_disk_bytes_in where c.n != 0 and c.time > <<start:0>> and c.time < <<end:0>> and ( <<nodes:none>> )
+final
+ yield time => int(c.time/1000), val => sum(c.value) / count(c.value), index => 1
+ yield time => int(c.time/1000), val => max(c.value), index => 2
+ yield time => int(c.time/1000), val => min(c.value), index => 3
+end
+
+flow2 = group c by int(c.time/(<<interval>>*1000000)) in graph_disk_bytes_out where c.n != 0 and c.time > <<start:0>> and c.time < <<end:0>> and ( <<nodes:none>> )
+final
+ yield time => int(c.time/1000), val => sum(c.value) / count(c.value), index => 4
+ yield time => int(c.time/1000), val => max(c.value), index => 5
+ yield time => int(c.time/1000), val => min(c.value), index => 6
+end
+flow3 = sort x in flow1 by x.time
+flow4 = sort x in flow2 by x.time
+print(zip;order=time,val,index) flow3,flow4
+
+columns = thetime_datetime, avgout_num, maxout_num, minout_num, avgin_num, maxin_num, minin_num
+

@@ -1,0 +1,27 @@
+pigquery=%default cf 'tasks_<<sys:gra>>'
+%default ntop '<<top:10>>';
+%default tp 'cputime';
+%default agg 'SUM'
+%default fstart_time <<start:1>>L
+%default fend_time <<end:1000000000000000>>L
+%default ftp 'tstart'
+%default resdir '/does/not/exist'
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray, va:{t:(
+    n:bytearray, v:bytearray)});
+ts1 = FOREACH tsr {
+   u = FILTER va BY n=='user';
+   ct = FILTER va BY n=='$tp';
+	 tf = FILTER va BY n=='$ftp';
+   GENERATE k AS key, FLATTEN(u.v) AS user, FLATTEN(ct.v) AS time,
+	 FLATTEN(tf.v) AS tfilter;
+};
+ts = FOREACH ts1 GENERATE key, user, (long)time AS time, 
+	 ((long)tfilter) * 1000L AS	tfilter;
+tsf = FILTER ts BY tfilter >= $fstart_time AND tfilter < $fend_time;
+gu = GROUP tsf BY user;
+timeuf = FOREACH gu GENERATE group AS user, $agg(tsf.time) AS time;
+ordu = ORDER timeuf BY time DESC;
+topu = LIMIT ordu $ntop;
+STORE topu INTO '$resdir' USING PigStorage(',');
+
+columns=user, cputime_num_cpusec

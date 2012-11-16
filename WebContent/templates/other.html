@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Weekly report - Users</title>
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>	
+<script type="text/javascript" src="/avroconnect/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/avroconnect/js/report.js"></script>
+<link rel="stylesheet" type="text/css" href="/avroconnect/css/styles.css">
+</head>
+
+<body>
+<h1>Jobs batch system report <<date: >></h1>
+<h3>Количество запусков для каждого имени выполнялки</h3>
+<h4 class="filename" id="request01c"></h4>
+<div style="height:800px;"><request id="01c" file="pack_nruns~sys_cheb!start_today-7!end_today" chart="BarChart" title="Number of executables starts on Chebyshev for last 7 days" isStacked="true" strictFirstColumnType="false" logScale="true" color="cheb"/></div>
+
+<h4 class="filename" id="request01l"></h4>
+<div style="height:400px;"><request id="01l" file="pack_nruns~sys_lom!start_today-7!end_today" chart="BarChart" title="Number of executables starts on Lomonosov for last 7 days" isStacked="true" strictFirstColumnType="false" logScale="true" color="lom"/></div>
+
+<h4 class="filename" id="request01g"></h4>
+<div style="height:400px;"><request id="01g" file="pack_nruns~sys_gra!start_today-7!end_today" chart="BarChart" title="Number of executables starts on GraphIt! for last 7 days" isStacked="true" strictFirstColumnType="false" logScale="true" color="gra"/></div>
+
+</body>
+</html>

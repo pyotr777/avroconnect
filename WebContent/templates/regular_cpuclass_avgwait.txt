@@ -1,0 +1,34 @@
+pigquery=%default cf 'tasks_<<sys:gra>>'
+%default fstart_time <<start:1000>>L
+%default fend_time <<end:1000000000000000>>L
+%default ftp 'tqueued'
+%default resdir '/does/not/exist'
+	
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray, va:{t:(
+		n:bytearray, v:bytearray)});
+ts1 = FOREACH tsr {
+	 nc = FILTER va BY n=='ncpus';
+	 q = FILTER va BY n=='queue';
+	 tf = FILTER va BY n=='$ftp';
+	 wt = FILTER va BY n=='waittime';
+	 GENERATE k AS key, FLATTEN(q.v) AS queue, FLATTEN(nc.v) AS ncpus,
+		 FLATTEN(wt.v) AS waittime, FLATTEN(tf.v) AS tfilter;
+};
+ts2 = FOREACH ts1 GENERATE key, queue, (long)ncpus, (long)waittime,
+		(long)tfilter;
+ts = FOREACH ts2 GENERATE key, (chararray)queue, waittime, tfilter,
+	(ncpus <= 8 ? '1-8' :
+	(ncpus <= 16 ? '9-16' :
+	(ncpus <= 32 ? '17-32' :
+	(ncpus <= 64 ? '33-64' :
+	(ncpus <= 128 ? '65-128' :
+	(ncpus <= 512 ? '129-512' : '513-65536')))))) AS cpuclass;
+tsf = FILTER ts BY waittime > 0 AND tfilter >= $fstart_time/1000L AND
+	tfilter < $fend_time/1000L AND
+	(queue == 'main' OR queue == 'regular' OR queue == 'regular4');
+g1 = GROUP tsf BY cpuclass;
+res = FOREACH g1 GENERATE group AS cpuclass, AVG(tsf.waittime) AS waittime;
+STORE res INTO '$resdir' USING PigStorage(',');
+
+columns=cpuclass, waittime_num_sec
+

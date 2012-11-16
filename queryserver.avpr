@@ -1,0 +1,13 @@
+{"namespace" : "hopsa",
+ "protocol" : "QueryServer", 
+ "types" : [], 
+ "messages" : {
+		 "doQuery" : {
+				 "request" : [
+						 {"name" : "query", "type" : "string"},
+						 {"name" : "pars", "type" : {"type" : "map", "values" : "string"}}
+				 ],
+				 "response" : "string"
+		 }
+ }
+}

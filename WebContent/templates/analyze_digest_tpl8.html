@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Job Digest for job <<jobid:0>></title>
+<script type="text/javascript" src="/avroconnect/js/jquery.js"></script>
+<script type="text/javascript" src="/avroconnect/js/highcharts.js"></script>
+<script type="text/javascript" src="/avroconnect/js/report-high.js"></script>
+<link rel="stylesheet" type="text/css" href="/avroconnect/css/styles.css">
+</head>
+
+<body>
+<center>
+<h1>Digest for job <<jobid:0>></h1>
+
+<table>
+<tr><td>User:</td><td> <<username:none>></td>        <td width="5%">&nbsp;</td><td>Command:</td><td><<cmd:unknown>></td></tr>
+<tr><td>Nodes:</td><td> <<nodesstr:none>></td>       <td width="5%">&nbsp;</td><td>CPU count:</td><td><<np:unknown>></td></tr>
+<tr><td>Started:</td><td> <<startstr:none>></td>     <td width="5%">&nbsp;</td><td>Queued:</td><td><<queuedstr:unknown>></td></tr>
+<tr><td>Ended:</td><td> <<endstr:none>></td>         <td width="5%">&nbsp;</td><td>Wait time:</td><td><<waitstr:unknown>></td></tr>
+<tr><td>CPU*Hours:</td><td> <<cpuhours:unknown>></td><td width="5%">&nbsp;</td><td>Run time:</td><td><<runstr:unknown>></td></tr>
+</table>
+</center>
+
+<request id="cpu_request" file="analyze_cpu_tpl8~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="avg,max,min" chart="line" color="bright" title="User CPU usage (%)"  />
+
+<request id="eth_request" file="analyze_eth_tpl8~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="avg_in,max_in,min_in,avg_out,max_out,min_out" chart="line" color="bright" title="Ethernet traffic speed (bytes/sec)" />
+
+<request id="ib_request" file="analyze_ib_tpl8~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="avg_out,max_out,min_out,avg_in,max_in,min_in" chart="line" color="bright" title="IB traffic speed (bytes/sec)" />
+
+<request id="mem_request" file="analyze_mem_tpl8~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="avg,max,min" chart="line" color="bright" title="Memory free (kbytes)" />
+
+<request id="swap_request" file="analyze_swap_tpl8~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="min in,avg in,max in, min out,avg out,max out" chart="line" color="bright" title="Swap usage intensity (kbytes/sec)" />
+
+<a style="link: #f0f0f0" href="<<errlog:none>>.txt">LOG</a>
+</body>
+</html>

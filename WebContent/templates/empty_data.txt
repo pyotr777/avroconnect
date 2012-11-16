@@ -1,0 +1,18 @@
+pigquery=%default cf 'tasks_<<sys:gra>>'
+%default fstart_time <<start:1325361600000>>L
+%default fend_time <<end:1335442521000>>L
+%default min_dur <<min_dur:100000>>
+%default resdir '/does/not/exist'
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray, va:{t:(n:bytearray, v:bytearray)});
+ts1 = FOREACH tsr {
+	tt = FILTER va BY n=='tqueued' OR n=='tstart' OR n=='tend';
+	GENERATE k AS key, FLATTEN(tt.v) AS time;
+};
+ts = FOREACH ts1 GENERATE key, (long)time * 1000L AS time;
+tsfu = FILTER ts BY time >= $fstart_time AND time < $fend_time;
+tss = ORDER tsfu BY time ASC;
+intervs = STREAM tss THROUGH `dintervs.pl $fstart_time $min_dur $fend_time`;
+STORE intervs INTO '$resdir' USING PigStorage(',');
+columns=start_date, dur_num_sec
+
+

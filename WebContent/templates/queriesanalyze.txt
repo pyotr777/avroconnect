@@ -1,0 +1,1072 @@
+shorttitle = Avg. queue wait
+
+longtitle = Average waittime in queue
+
+columns = queue, avgwaittime_num_sec
+
+pigquery = 
+
+%default cf 'tasks_cheb'
+
+%default fstart_time 1L
+
+%default fend_time 1000000000000000L
+
+%default ftp 'tqueued'
+
+%default resdir '/does/not/exist'
+
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray, va:{t:(
+
+		n:bytearray, v:bytearray)});
+
+ts1 = FOREACH tsr {
+
+	 q = FILTER va BY n=='queue';
+
+	 wt = FILTER va BY n=='waittime';
+
+	 tf = FILTER va BY n=='$ftp';
+
+	 GENERATE k AS key, FLATTEN(q.v) AS queue, FLATTEN(wt.v) AS waittime, 
+
+	 FLATTEN(tf.v) AS tfilter;
+
+};
+
+ts = FOREACH ts1 GENERATE key, queue, (long)waittime, 
+
+	 ((long)tfilter) * 1000L AS	tfilter;
+
+tsf = FILTER ts BY (tfilter >= $fstart_time) AND (tfilter < $fend_time);
+
+gu = GROUP tsf BY queue;
+
+waittimeq = FOREACH gu GENERATE group AS queue, AVG(tsf.waittime) AS avgwaittime;
+
+STORE waittimeq INTO '$resdir' USING PigStorage(',');
+
+
+
+
+
+shorttitle = Day avg.q.length
+
+longtitle = Average queue length by day
+
+columns = queue, day_time, avglength_num
+
+pigquery = 
+
+%default cf 'tasks_lom'
+
+%default fstart_time 1L
+
+%default fend_time 1000000000000000L
+
+%default ftp 'tqueued'
+
+%default resdir 'does/not/exist'
+
+%default period 86400
+
+REGISTER hopsa-udfs.jar;
+
+DEFINE SDATERANGES hopsa.udfs.SDATERANGES;
+
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray,
+
+	va:{t:(n:bytearray, v:bytearray)});
+
+ts1 = FOREACH tsr {
+
+	tq = FILTER va BY n=='tqueued';
+
+	q = FILTER va BY n=='queue';
+
+	tw = FILTER va BY n=='waittime';
+
+  tf = FILTER va BY n=='$ftp';					
+
+	GENERATE k AS key, FLATTEN(q.v) AS queue, FLATTEN(tq.v) AS tqueued,
+
+		FLATTEN(tw.v) AS waittime, FLATTEN(tf.v) AS tfilter;
+
+};
+
+ts = FOREACH ts1 GENERATE key, queue, (long)tqueued, (long)waittime,
+
+	((long)tfilter) * 1000L AS tfilter;
+
+tsf = FILTER ts BY tfilter >= $fstart_time AND tfilter < $fend_time;
+
+ranges1 = FOREACH tsf GENERATE key, queue, SDATERANGES(tqueued, waittime, $period) AS
+
+	intervals;
+
+ranges = FOREACH ranges1 GENERATE key, queue, FLATTEN(intervals) AS
+
+			  (start : long, length : long);
+
+rangeGroups = GROUP ranges BY (queue, start - start % $period);
+
+avgtimes = FOREACH rangeGroups GENERATE group.$0 AS queue, group.$1 * 1000 AS day,
+
+	SUM(ranges.length) / (double)$period AS	avglength;
+
+STORE avgtimes INTO '$resdir' USING PigStorage(',');
+
+
+
+googlequery = SELECT B, sum(C) group by B pivot A
+
+
+
+
+
+shorttitle = Num.tasks by CPU num.
+
+longtitle = Tasks by number of CPUs used distribution
+
+columns = ncpus_num, ntasks_num
+
+pigquery =
+
+%default cf 'tasks_lom'
+
+%default fstart_time 1L
+
+%default fend_time 1000000000000000L
+
+%default ftp 'tqueued'
+
+%default resdir '/does/not/exist'
+
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray, va:{t:(
+
+		n:bytearray, v:bytearray)});
+
+ts1 = FOREACH tsr {
+
+	 nc = FILTER va BY n=='ncpus';
+
+	 tf = FILTER va BY n=='$ftp';
+
+	 GENERATE k AS key, FLATTEN(nc.v) AS ncpus, FLATTEN(tf.v) AS tfilter;
+
+};
+
+ts = FOREACH ts1 GENERATE key, ncpus, ((long)tfilter) * 1000L AS tfilter;
+
+tsf = FILTER ts BY tfilter >= $fstart_time AND tfilter < $fend_time;
+
+gnc = GROUP tsf BY ncpus;
+
+countnc = FOREACH gnc GENERATE group AS ncpus, COUNT(ts) AS ntasks;
+
+STORE countnc INTO '$resdir' USING PigStorage(',');
+
+ 
+
+
+
+shorttitle = Num.users queuing by day
+
+longtitle = Distribution of number of users queuing tasks on each given day
+
+columns = queue, day_time, nqusers_num
+
+pigquery = 
+
+%default cf 'tasks_lom'
+
+%default period 86400
+
+%default fstart_time 1L
+
+%default fend_time 1000000000000000L
+
+%default ftp 'tqueued'
+
+%default resdir '/does/not/exist'
+
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray, va:{t:(
+
+		n:bytearray, v:bytearray)});
+
+ts1 = FOREACH tsr {
+
+	 u = FILTER va BY n=='user';
+
+	 tq = FILTER va BY n=='tqueued';
+
+	 q = FILTER va BY n=='queue';
+
+	 tf = FILTER va BY n=='$ftp';
+
+	 GENERATE k AS key, FLATTEN(q.v) AS queue, FLATTEN(u.v) AS user, 
+
+	 FLATTEN(tq.v) AS tqueued, FLATTEN(tf.v) AS tfilter;
+
+};
+
+ts = FOREACH ts1 GENERATE key, queue, user, (long)tqueued - (long)tqueued %
+
+		$period AS dayqueued, ((long)tfilter) * 1000L AS tfilter;
+
+tsf = FILTER ts BY tfilter >= $fstart_time AND tfilter < $fend_time;
+
+gud = GROUP tsf BY (queue, dayqueued, user);
+
+guntasks = FOREACH gud GENERATE group.queue AS queue, group.dayqueued AS dayqueued,
+
+	group.user AS user, COUNT(ts) AS ntasks;
+
+gd = GROUP guntasks BY (queue, dayqueued);
+
+dqusers = FOREACH gd GENERATE group.queue AS queue, group.dayqueued * 1000 AS day,
+
+	COUNT(guntasks) AS nqusers;
+
+STORE dqusers INTO '$resdir' USING PigStorage(',');
+
+
+
+
+
+shorttitle = Num. tasks queued by day
+
+longtitle = Number of tasks queued on each given day
+
+columns = day_time, ntasks_num
+
+pigquery = 
+
+%default cf 'tasks_cheb'
+
+%default tp 'tqueued'
+
+%default period '86400'
+
+%default fstart_time 1L
+
+%default fend_time 1000000000000000L
+
+%default ftp 'tqueued'
+
+%default resdir '/does/not/exist'
+
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray,
+
+		va:{t:(n:bytearray, v:bytearray)});
+
+ts1 = FOREACH tsr {
+
+	 tr = FILTER va BY n=='$tp';
+
+	 tf = FILTER va BY n=='$ftp';
+
+	 GENERATE k AS key, FLATTEN(tr.v) AS $tp, FLATTEN(tf.v) AS tfilter;
+
+};
+
+ts = FOREACH ts1 GENERATE key, ((long)$tp)/$period*$period AS day,
+
+	 ((long)tfilter) * 1000L AS	tfilter;
+
+tsf = FILTER ts BY tfilter >= $fstart_time AND tfilter < $fend_time;
+
+grp = GROUP tsf BY day;
+
+daycount = FOREACH grp GENERATE group * 1000 AS day, COUNT(ts) AS ntasks;
+
+STORE daycount INTO '$resdir' USING PigStorage(',');
+
+
+
+
+
+shorttitle = Wait time by CPU class
+
+longtitle = Distribution of task wait time by CPU class
+
+columns = ncpusclass_num, avgwaittime_num_sec
+
+pigquery = 
+
+%default cf 'tasks_lom'
+
+%default fstart_time 1L
+
+%default fend_time 1000000000000000L
+
+%default ftp 'tqueued'
+
+%default resdir '/does/not/exist'
+
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray, va:{t:(
+
+		n:bytearray, v:bytearray)});
+
+ts1 = FOREACH tsr {
+
+	 nc = FILTER va BY n=='ncpus';
+
+	 wt = FILTER va BY n=='waittime';
+
+	 tf = FILTER va BY n=='$ftp';
+
+	 GENERATE k AS key, FLATTEN(nc.v) AS ncpus, FLATTEN(wt.v) AS waittime, 
+
+	 FLATTEN(tf.v) AS tfilter;
+
+};
+
+ts = FOREACH ts1 GENERATE key, ncpus, (long)waittime AS waittime,
+
+	 ((long)tfilter) * 1000L AS	tfilter;
+
+tsf = FILTER ts BY tfilter >= $fstart_time AND tfilter < $fend_time;
+
+gnc = GROUP tsf BY FLOOR(LOG(ncpus) / LOG(2.0));
+
+countnc = FOREACH gnc GENERATE (int)ROUND(EXP(LOG(2.0) * group))  AS ncpuclass,
+
+	AVG(tsf.waittime) AS avgwait;
+
+STORE countnc INTO '$resdir' USING PigStorage(',');
+
+
+
+
+
+shorttitle = Top user avg.CPUs
+
+longtitle = Top users by average number of CPUs used in their tasks
+
+columns = user, avgncpus_num
+
+pigquery = 
+
+%default cf 'tasks_cheb'
+
+%default ntop '50';
+
+%default fstart_time 1L
+
+%default fend_time 1000000000000000L
+
+%default ftp 'tqueued'
+
+%default resdir '/does/not/exist';
+
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray, va:{t:(
+
+		n:bytearray, v:bytearray)});
+
+ts1 = FOREACH tsr {
+
+	 u = FILTER va BY n=='user';
+
+	 nc = FILTER va BY n=='ncpus';
+
+	 tf = FILTER va BY n=='$ftp';
+
+	 GENERATE k AS key, FLATTEN(u.v) AS user, FLATTEN(nc.v) AS ncpus,
+
+	 FLATTEN(tf.v) AS tfilter;
+
+};
+
+ts = FOREACH ts1 GENERATE key, user, (long)ncpus AS ncpus,
+
+	 ((long)tfilter) * 1000L AS	tfilter;
+
+tsf = FILTER ts BY tfilter >= $fstart_time AND tfilter < $fend_time;
+
+gu = GROUP tsf BY user;
+
+ftimeu = FOREACH gu GENERATE group AS user, AVG(tsf.ncpus) AS avgncpus;
+
+ordu = ORDER ftimeu BY avgncpus DESC;
+
+topu = LIMIT ordu $ntop;
+
+STORE topu INTO '$resdir' USING PigStorage(',');
+
+
+
+
+
+shorttitle = Top user n.tasks
+
+longtitle = Top users by number of tasks they launched
+
+columns = user, ntasks_num
+
+pigquery = 
+
+%default cf 'tasks_cheb'
+
+%default ntop '20';
+
+%default fstart_time 1L
+
+%default fend_time 1000000000000000L
+
+%default ftp 'tstart'
+
+%default resdir '/does/not/exist';
+
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray, va:{t:(
+
+		n:bytearray, v:bytearray)});
+
+ts1 = FOREACH tsr {
+
+	 u = FILTER va BY n=='user';	 
+
+	 tf = FILTER va BY n=='$ftp';
+
+	 GENERATE k AS key, FLATTEN(u.v) AS user, FLATTEN(tf.v) AS tfilter;
+
+};
+
+ts = FOREACH ts1 GENERATE key, user, ((long)tfilter) * 1000L AS	tfilter;
+
+tsf = FILTER ts BY tfilter >= $fstart_time AND tfilter < $fend_time;
+
+gu = GROUP tsf BY user;
+
+countu = FOREACH gu GENERATE group AS user, COUNT(ts) AS ntasks;
+
+ordu = ORDER countu BY ntasks DESC;
+
+topu = LIMIT ordu $ntop;
+
+STORE topu INTO '$resdir' USING PigStorage(',');
+
+
+
+
+
+shorttitle = Total CPU time
+
+longtitle = Total CPU time used by all tasks
+
+columns = cputime_num_cpusec
+
+pigquery = 
+
+%default cf 'tasks_cheb'
+
+%default ntop '10';
+
+%default fstart_time 1L
+
+%default fend_time 1000000000000000L
+
+%default ftp 'tstart'
+
+%default resdir '/does/not/exist'
+
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray, va:{t:(
+
+		n:bytearray, v:bytearray)});
+
+ts1 = FOREACH tsr {
+
+	 ct = FILTER va BY n=='cputime';
+
+	 tf = FILTER va BY n=='$ftp';
+
+	 GENERATE k AS key, FLATTEN(ct.v) AS time, FLATTEN(tf.v) AS tfilter;
+
+};
+
+ts = FOREACH ts1 GENERATE key, (long)time AS time, 
+
+	 ((long)tfilter) * 1000L AS tfilter; 
+
+tsf = FILTER ts BY tfilter >= $fstart_time AND tfilter < $fend_time;
+
+gu = GROUP tsf ALL;
+
+timeu = FOREACH gu GENERATE SUM(tsf.time) AS time;
+
+STORE timeu INTO '$resdir' USING PigStorage(',');
+
+
+
+
+
+shorttitle = Week day avg.wait
+
+longtitle = Distribution of average wait time by week day
+
+columns = wday_wday, avgwaittime_num_sec
+
+pigquery = 
+
+%default cf 'tasks_lom'
+
+%default fstart_time 1L
+
+%default fend_time 1000000000000000L
+
+%default ftp 'tstart'
+
+%default resdir '/does/not/exist'
+
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray,
+
+		va:{t:(n:bytearray, v:bytearray)});
+
+ts1 = FOREACH tsr {
+
+	 tr = FILTER va BY n=='tqueued';
+
+	 wt = FILTER va BY n=='waittime';
+
+	 ts = FILTER va BY n=='tstart';
+
+	 tf = FILTER va BY n=='$ftp';
+
+	 GENERATE k AS key, FLATTEN(wt.v) AS waittime, FLATTEN(tr.v) AS tqueued, FLATTEN(ts.v)
+
+		AS tstart, FLATTEN(tf.v) AS tfilter;
+
+};
+
+ts = FOREACH ts1 GENERATE key, (long)waittime AS waittime, 
+
+  (((long)tqueued)/86400-4)%7 + 1 AS wday, (long)tstart AS tstart,
+
+	((long)tfilter) * 1000L AS	tfilter;
+
+tsf = FILTER ts BY tstart > 0 AND tfilter >= $fstart_time AND tfilter < $fend_time;
+
+grp = GROUP tsf BY wday;
+
+daycount = FOREACH grp GENERATE group AS day, AVG(tsf.waittime) AS avgwait;
+
+STORE daycount INTO '$resdir' USING PigStorage(',');
+
+
+
+
+
+shorttitle = W.day month avg. wait
+
+longtitle = How average wait time on a given week day changes accross weeks
+
+columns = month_month, wday_wday, avgwaittime_num_sec
+
+pigquery = 
+
+%default cf 'tasks_cheb'
+
+%default fstart_time 1L
+
+%default fend_time 1000000000000000L
+
+%default ftp 'tstart'
+
+%default resdir '/does/not/exist'
+
+REGISTER hopsa-udfs.jar;
+
+DEFINE SWDAY hopsa.udfs.SWDAY;
+
+DEFINE SMONTH hopsa.udfs.SMONTH;
+
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray,
+
+		va:{t:(n:bytearray, v:bytearray)});
+
+ts1 = FOREACH tsr {
+
+	 tr = FILTER va BY n=='tqueued';
+
+	 wt = FILTER va BY n=='waittime';
+
+	 ts = FILTER va BY n=='tstart';
+
+	 tf = FILTER va BY n=='$ftp';
+
+	 GENERATE k AS key, FLATTEN(wt.v) AS waittime, FLATTEN(tr.v) AS tqueued, FLATTEN(ts.v)
+
+		AS tstart, FLATTEN(tf.v) AS tfilter;
+
+};
+
+ts = FOREACH ts1 GENERATE key, (long)waittime AS waittime, 
+
+  SWDAY((long)tqueued) AS wday, SMONTH((long)tqueued) AS month,	
+
+	(long)tstart AS	tstart,	((long)tfilter) * 1000L AS	tfilter;
+
+tsf = FILTER ts BY tstart > 0 AND tfilter >= $fstart_time AND tfilter < $fend_time;
+
+grp = GROUP ts BY (wday, month);
+
+daycount = FOREACH grp GENERATE group.month AS month, group.wday AS wday,	
+
+				 AVG(tsf.waittime)
+
+		AS avgwait;
+
+STORE daycount INTO '$resdir' USING PigStorage(',');
+
+
+
+
+
+shorttitle = Avg. hour num.queued
+
+longtitle = Average number of tasks queued in a given hour of the day, for each queue
+
+columns = queue, hour_num_hour, avgtasks_num
+
+pigquery = 
+
+%default cf 'tasks_cheb'
+
+%default period 3600
+
+%default nperiods 24
+
+%default fstart_time 1L
+
+%default fend_time 1000000000000000L
+
+%default ftp 'tqueued'
+
+%default tz 4
+
+%default resdir '/does/not/exist'
+
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray, va:{t:(
+
+    n:bytearray, v:bytearray)});
+
+ts1 = FOREACH tsr {
+
+   tq = FILTER va BY n=='tqueued';
+
+   q = FILTER va BY n=='queue';
+
+	 tf = FILTER va BY n=='$ftp';
+
+   GENERATE k AS key, FLATTEN(q.v) AS queue, FLATTEN(tq.v) AS tqueued,
+
+	 FLATTEN(tf.v) AS tfilter;
+
+};
+
+ts = FOREACH ts1 GENERATE key, queue, (long)tqueued AS tqueued, 
+
+	 ((long)tfilter) * 1000L AS	tfilter;
+
+tsf = FILTER ts BY tfilter >= $fstart_time AND tfilter < $fend_time;
+
+tsp = FOREACH tsf GENERATE key, queue, (tqueued / $period + $tz) % $nperiods AS hour;
+
+gper = GROUP tsp BY (queue, hour);
+
+avgqper = FOREACH gper GENERATE group.queue AS queue, group.hour AS hour,
+
+  COUNT(tsp) / 365.0 AS avgtasks;
+
+STORE avgqper INTO '$resdir' USING PigStorage(',');
+
+
+
+
+
+shorttitle = Avg. run-to-wait
+
+longtitle = Average relation of runttime and waittime for all tasks of a given user
+
+columns = user, avgruntowait_num
+
+pigquery = 
+
+%default cf 'tasks_cheb'
+
+%default fstart_time 1L
+
+%default fend_time 1000000000000000L
+
+%default ftp 'tstart'
+
+%default resdir '/does/not/exist'
+
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray, va:{t:(
+
+    n:bytearray, v:bytearray)});
+
+ts1 = FOREACH tsr {
+
+   u = FILTER va BY n=='user';
+
+   wt = FILTER va BY n=='waittime';
+
+   rt = FILTER va BY n=='runtime';
+
+	 tf = FILTER va BY n=='$ftp';
+
+   GENERATE k AS key, FLATTEN(u.v) AS user, FLATTEN(wt.v) AS waittime, FLATTEN(rt.v) AS
+
+    runtime, FLATTEN(tf.v) AS tfilter;
+
+};
+
+ts = FOREACH ts1 GENERATE key, user, 
+
+	 (double)((long)waittime) AS waittime, (double)((long)runtime) AS runtime, 
+
+	(double)((long)runtime) / (double)((long)waittime) AS rel, 
+
+	((long)tfilter) * 1000L AS tfilter;
+
+tsf = FILTER ts BY waittime > 0.0 AND runtime > 0.0 AND 
+
+		tfilter >= $fstart_time AND tfilter < $fend_time;
+
+gu = GROUP tsf BY user;
+
+timerel = FOREACH gu GENERATE group AS user, AVG(tsf.rel) AS  avgrel;
+
+ordu = ORDER timerel BY avgrel DESC;
+
+STORE ordu INTO '$resdir' USING PigStorage(',');
+
+
+
+
+
+shorttitle = Num.tasks by time class
+
+longtitle = Number of tasks in each particular class by CPU time
+
+columns = cputimeclass, ntasks_num
+
+pigquery = 
+
+%default cf 'tasks_cheb'
+
+%default tp 'cputime'
+
+%default fstart_time 1L
+
+%default fend_time 1000000000000000L
+
+%default ftp 'tstart'
+
+%default resdir '/does/not/exist'
+
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray, va:{t:(
+
+    n:bytearray, v:bytearray)});
+
+ts1 = FOREACH tsr {
+
+   t = FILTER va BY n=='$tp';
+
+	 tf = FILTER va BY n=='$ftp';
+
+   GENERATE k AS key, FLATTEN(t.v) AS time, FLATTEN(tf.v) AS tfilter;
+
+};
+
+ts = FOREACH ts1 GENERATE key, (long)time AS time, 
+
+	 ((long)tfilter) * 1000L AS	tfilter;;
+
+tsf = FILTER ts BY tfilter >= $fstart_time AND tfilter < $fend_time;
+
+tclasses = FOREACH tsf GENERATE key,
+
+  (time == 0 ? '0m' :
+
+  (time <= 300 ? '5m' :
+
+  (time <= 1200 ? '20m' :
+
+  (time <= 2400 ? '40m' :
+
+  (time <= 3600 ? '1h' :
+
+  (time <= 7200 ? '2h' :
+
+  (time <= 18000 ? '5h' :
+
+  (time <= 43200 ? '12h' :
+
+  (time <= 86400 ? '24h' :
+
+  (time <= 172800 ? '48h' :
+
+  (time <= 259200 ? '72h' :
+
+  '>72h'))))))))))) AS tclass;
+
+cgroups = GROUP tclasses BY tclass;
+
+tcounts = FOREACH cgroups GENERATE group AS tclass, COUNT(tclasses) AS ntasks;
+
+STORE tcounts INTO '$resdir' USING PigStorage(',');
+
+
+
+
+
+shorttitle = Top exec. num.runs
+
+longtitle = Top executable names by number of runs
+
+columns = exefile, nuses_num
+
+pigquery = 
+
+%default cf 'tasks_cheb'
+
+%default ntop 100
+
+%default fstart_time 1L
+
+%default fend_time 1000000000000000L
+
+%default ftp 'tstart'
+
+%default resdir '/does/not/exist'
+
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray, va:{t:(
+
+    n:bytearray, v:bytearray)});
+
+ts1 = FOREACH tsr {
+
+   un = FILTER va BY n=='user';
+
+   cl = FILTER va BY n=='cmdline';
+
+	 tf = FILTER va BY n=='$ftp';
+
+   GENERATE k AS key, FLATTEN(un.v) AS user, FLATTEN(cl.v) AS cmdline, 
+
+	 FLATTEN(tf.v) AS tfilter;
+
+};
+
+ts = FOREACH ts1 GENERATE key, user,
+
+  REGEX_EXTRACT(cmdline, '/?([-~._a-zA-Z0-9]*/)*([-~._a-zA-Z0-9]{1,})', 2) AS
+
+	pack, ((long)tfilter) * 1000L AS	tfilter;
+
+tsf = FILTER ts BY tfilter >= $fstart_time AND tfilter < $fend_time;
+
+grp = GROUP tsf BY pack;
+
+packs = FOREACH grp GENERATE group AS pack, COUNT(ts) AS nuses;
+
+lpacks = ORDER packs BY nuses DESC;
+
+topacks = LIMIT lpacks $ntop;
+
+STORE topacks INTO '$resdir' USING PigStorage(',');
+
+
+
+
+
+shorttitle = Top exec. num. users
+
+longtitle = Top executable name by number of users using it
+
+columns = exefile, nusers_num
+
+pigquery = 
+
+%default cf 'tasks_cheb'
+
+%default ntop 100
+
+%default fstart_time 1L
+
+%default fend_time 1000000000000000L
+
+%default ftp 'tstart'
+
+%default resdir '/does/not/exist'
+
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray, va:{t:(
+
+    n:bytearray, v:bytearray)});
+
+ts1 = FOREACH tsr {
+
+   un = FILTER va BY n=='user';
+
+   cl = FILTER va BY n=='cmdline';
+
+	 tf = FILTER va BY n=='$ftp';
+
+   GENERATE k AS key, FLATTEN(un.v) AS user, FLATTEN(cl.v) AS cmdline, 
+
+	 FLATTEN(tf.v) AS tfilter;
+
+};
+
+ts = FOREACH ts1 GENERATE key, user,
+
+  REGEX_EXTRACT(cmdline, '/?([-~._a-zA-Z0-9]*/)*([-~._a-zA-Z0-9]{1,})', 2) AS
+
+    pack, ((long)tfilter) * 1000L AS	tfilter;
+
+tsf = FILTER ts BY tfilter >= $fstart_time AND tfilter < $fend_time;
+
+grp = GROUP tsf BY (pack, user);
+
+ucs = FOREACH grp GENERATE group.pack AS pack, group.user AS user, COUNT(ts) AS nruns;
+
+grp2 = GROUP ucs BY pack;
+
+packs = FOREACH grp2 GENERATE group AS pack, COUNT(ucs) AS nusers, SUM(ucs.nruns) AS
+
+    nruns;
+
+lpacks = ORDER packs BY nusers DESC;
+
+topacks = LIMIT lpacks $ntop;
+
+STORE topacks INTO '$resdir' USING PigStorage(',');
+
+
+
+
+
+shorttitle = Top users by CPU time
+
+longtitle = Top users by total CPU time
+
+columns = user, cputime_num_cpusec
+
+pigquery = 
+
+%default cf 'tasks_cheb'
+
+%default ntop '10';
+
+%default tp 'cputime';
+
+%default agg 'SUM'
+
+%default fstart_time 1L
+
+%default fend_time 1000000000000000L
+
+%default ftp 'tstart'
+
+%default resdir '/does/not/exist'
+
+
+
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray, va:{t:(
+
+    n:bytearray, v:bytearray)});
+
+ts1 = FOREACH tsr {
+
+   u = FILTER va BY n=='user';
+
+   ct = FILTER va BY n=='$tp';
+
+	 tf = FILTER va BY n=='$ftp';
+
+   GENERATE k AS key, FLATTEN(u.v) AS user, FLATTEN(ct.v) AS time,
+
+	 FLATTEN(tf.v) AS tfilter;
+
+};
+
+ts = FOREACH ts1 GENERATE key, user, (long)time AS time, 
+
+	 ((long)tfilter) * 1000L AS	tfilter;
+
+tsf = FILTER ts BY tfilter >= $fstart_time AND tfilter < $fend_time;
+
+gu = GROUP tsf BY user;
+
+timeuf = FOREACH gu GENERATE group AS user, $agg(tsf.time) AS time;
+
+ordu = ORDER timeuf BY time DESC;
+
+topu = LIMIT ordu $ntop;
+
+STORE topu INTO '$resdir' USING PigStorage(',');
+
+
+
+
+
+shorttitle = Num.days user queued smth.
+
+longtitle = Number of days on which the user has queued something
+
+columns = user, ndays_num
+
+pigquery = 
+
+%default cf 'tasks_cheb'
+
+%default period 86400
+
+%default fstart_time 1L
+
+%default fend_time 1000000000000000L
+
+%default ftp 'tqueued'
+
+%default resdir '/does/not/exist'
+
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray, va:{t:(
+
+    n:bytearray, v:bytearray)});
+
+ts1 = FOREACH tsr {
+
+   u = FILTER va BY n=='user';
+
+   tq = FILTER va BY n=='tqueued';
+
+	 tf = FILTER va BY n=='$ftp';
+
+   GENERATE k AS key, FLATTEN(u.v) AS user, FLATTEN(tq.v) AS tqueued,
+
+	 FLATTEN(tf.v) AS tfilter;
+
+};
+
+ts = FOREACH ts1 GENERATE key, user, (long)tqueued / $period AS dayqueued, 
+
+	 ((long)tfilter) * 1000L AS	tfilter;
+
+tsf = FILTER ts BY tfilter >= $fstart_time AND tfilter < $fend_time;
+
+gud = GROUP tsf BY (user, dayqueued);
+
+guntasks = FOREACH gud GENERATE group.user AS user, group.dayqueued AS dayqueued,
+
+    COUNT(ts) AS ntasks;
+
+gu = GROUP guntasks BY user;
+
+uqdays = FOREACH gu GENERATE group AS user, COUNT(guntasks) AS nqdays;
+
+ordu = ORDER uqdays BY nqdays DESC;
+
+STORE ordu INTO '$resdir' USING PigStorage(',');
+

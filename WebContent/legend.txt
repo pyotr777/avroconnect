@@ -1,0 +1,3 @@
+avgwaittime: Average wait time
+nusers: Number of users	
+dur:Period

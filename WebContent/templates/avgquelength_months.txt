@@ -1,0 +1,45 @@
+pigquery=%default cf 'tasks_<<sys:gra>>'
+%default fstart_time 1325376000000L
+%default fend_time <<today>>L
+/* 4 days lag */
+%default max_lag 259200L
+%default resdir 'does/not/exist'
+%default period 86400
+REGISTER hopsa-udfs.jar;
+DEFINE SDATERANGES hopsa.udfs.SDATERANGES;
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray,
+	va:{t:(n:bytearray, v:bytearray)});
+ts1 = FOREACH tsr {
+	tq = FILTER va BY n=='tqueued';
+	ts = FILTER va BY n=='tstart';
+	te = FILTER va BY n=='tend';
+	q = FILTER va BY n=='queue';
+	tw = FILTER va BY n=='waittime';
+	GENERATE k AS key, FLATTEN(q.v) AS queue, FLATTEN(tq.v) AS tqueued,
+		FLATTEN(ts.v) AS tstart, FLATTEN(te.v) AS tend,	FLATTEN(tw.v) AS waittime;
+};
+ts = FOREACH ts1 GENERATE key, queue, (long)tqueued, (long)tstart,
+	(long)tend, (long)waittime;
+tsf1 = FILTER ts BY tqueued <= $fend_time/1000L AND
+	(tqueued + waittime > $fstart_time/1000L);
+tsf2 = FOREACH tsf1 GENERATE key, queue,
+	(waittime == 0 AND (tstart > 0 OR tend > 0) ? 1 : waittime) AS waittime,
+	tqueued AS tqueued_old,
+	(tqueued > $fstart_time/1000L ? tqueued : $fstart_time/1000L) AS tqueued;
+tsf = FOREACH tsf2 GENERATE key, queue, tqueued,
+	(waittime > 0 ? (tqueued_old + waittime > $fend_time/1000L ?
+	$fend_time/1000L : tqueued_old + waittime) - tqueued
+	: ($fend_time/1000L - tqueued > $max_lag ?
+	$max_lag : $fend_time/1000L - tqueued)) AS waittime;
+ranges1 = FOREACH tsf GENERATE key, queue, SDATERANGES(tqueued, waittime, $period) AS
+	intervals;
+ranges = FOREACH ranges1 GENERATE key, queue, FLATTEN(intervals) AS
+			  (start : long, length : long);
+rangeGroups = GROUP ranges BY (queue, start - start % $period);
+avgtimes = FOREACH rangeGroups GENERATE group.$0 AS queue, group.$1 * 1000 AS day,
+	SUM(ranges.length) / (double)$period AS	avglength;
+STORE avgtimes INTO '$resdir' USING PigStorage(',');
+
+columns=queue, day_date, avglength_num
+
+googlequery=select month(day), avg(avglength) group by month(day) pivot queue

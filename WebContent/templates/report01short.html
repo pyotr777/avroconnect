@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+<title><<date: >> Job digest short</title>
+<script type="text/javascript" src="/avroconnect/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/avroconnect/js/highcharts.js"></script>
+<script type="text/javascript" src="/avroconnect/js/report-high-m.js"></script>
+<link rel="stylesheet" type="text/css" href="/avroconnect/css/styles.css">
+</head>
+<body>
+<h1>Short Job digest <<date: >></h1>
+<h3>Периоды отсутствия данных</h3>
+<div class="toggable">
+  <request id="0c" file="empty_data~sys_cheb!end_today" chart="column" title="No log data periods on Chebyshev" stacking="normal" color="cheb" vaxis="no data period length (sec)" baseURL="http://spreadsheets.google.com/tq?tqx=out:html&key=0Aq-sgeVXult3dHJVM1VkM0VhWldGN2NBcU0xcWdXeFE" descr="true" source="txt"></request>
+  <request id="0l" file="empty_data~sys_lom!end_today" chart="column" title="No log data periods on Lomonosov" stacking="normal" color="lom" vaxis="no data period length (sec)" descr="true"></request>
+  <request id="0g" file="empty_data~sys_gra!end_today" chart="column" title="No log data periods on GraphIt!" stacking="normal" color="gra" vaxis="no data period length (sec)" descr="true"></request>
+</div>
+
+<h2>1. Сколько ожидают в среднем задачи</h2>
+<h3>1.0.0 Распределение среднего времени ожидания за последние 7 дней (без учёта очередей)</h3>
+<div class="chart_container">
+  <div class="cell_2">
+    <request id="010c" file="avgwaittime_nq~sys_cheb!start_today-7" chart="Number" title="Average waittime on Chebyshev for last 7 days" vaxis="waittime (sec)" descr="true" source="txt"></request>
+  </div>
+  <div class="cell_2">
+    <request id="010l" file="avgwaittime_nq~sys_lom!start_today-7" chart="Number" title="Average waittime on Lomonosov for last 7 days" vaxis="waittime (sec)"></request>
+  </div>
+  <div class="cell_2">
+    <request id="010g" file="avgwaittime_nq~sys_gra!start_today-7" chart="Number" title="Average waittime on GraphIt! for last 7 days" vaxis="waittime (sec)"></request>
+  </div>
+</div>
+
+<h2>2. Сколько задач в среднем находится в очереди на исполнение</h2>
+<h3>Распределение числа задач ожидающих исполнения по дням прошедшей недели</h3>
+<div class="toggable">
+  <request id="14c" file="avgquelength_lastweek~sys_cheb" chart="column" title="Average queue length on Chebyshev last 7 days" stacking="normal" color="cheb" vaxis="jobs" source="txt" descr="true"></request>
+  <request id="14l" file="avgquelength_lastweek~sys_lom" chart="column" title="Average queue length on Lomonosov last 7 days" stacking="normal" color="lom" vaxis="jobs"  source="txt" descr="true"></request>
+  <request id="14g" file="avgquelength_lastweek~sys_gra" chart="column" title="Average queue length on GraphIt! last 7 days" stacking="normal" color="gra"  vaxis="jobs" source="txt" descr="true"></request>
+</div>
+
+<h3>2.2.2 Распределение числа выполненных задач по дням прошедшей недели</h3>
+<div class="toggable">
+    <request id="222c" file="day_queue_nfinished~sys_cheb!start_today-7!end_today" chart="column" stacking="normal" title="Number of finished jobs last 7 days on Chebyshev" vaxis="jobs" color="cheb"  source="txt" descr="true" ></request>
+    <request id="222l" file="day_queue_nfinished~sys_lom!start_today-7!end_today" chart="column" stacking="normal" title="Number of finished jobs last 7 days on Lomonosov" vaxis="jobs" color="lom"  source="txt" descr="true" ></request>
+    <request id="222g" file="day_queue_nfinished~sys_gra!start_today-7!end_today" chart="column" stacking="normal" title="Number of finished jobs last 7 days on GraphiIt!" vaxis="jobs" color="gra"   source="txt" descr="true"></request>
+</div>
+
+<h3>2.2.8 Распределение числа задач по времени выполнения (время выполнения меньше или равно границе интервала)</h3>
+<div class="toggable">
+    <request id="228ac" file="time_min_ntasks~sys_cheb!start_today-7!end_today" chart="column" title="Number of jobs by run time on Chebyshev for last 7 days (run time < 2 hours, in minutes)" stacking="normal" color="cheb" vaxis="jobs" source="txt" descr="true"></request>
+      <request id="228bc" file="time_hour_ntasks~sys_cheb!start_today-7!end_today" chart="column" title="Number of jobs by run time on Chebyshev for last 7 days (run time > 2 hours, in hours)" stacking="normal" color="cheb" vaxis="jobs" source="txt" descr="true"></request>
+      
+    <request id="228al" file="time_min_ntasks~sys_lom!start_today-7!end_today" chart="column" title="Number of jobs by run time on Lomonosov for last 7 days (run time < 2 hours, in minutes)" stacking="normal" color="lom" vaxis="jobs" source="txt" descr="true"></request>     
+    <request id="228bl" file="time_hour_ntasks~sys_lom!start_today-7!end_today" chart="column" title="Number of jobs by run time on Lomonosov for last 7 days (run time > 2 hours, in hours)" stacking="normal" color="lom" vaxis="jobs"></request>
+    
+    <request id="228ag" file="time_min_ntasks~sys_gra!start_today-7!end_today" chart="column" title="Number of jobs by run time on GraphIt! for last 7 days (run time < 2 hours, in minutes)" stacking="normal" color="gra" vaxis="jobs" source="txt" descr="true"></request>
+    <request id="228bg" file="time_hour_ntasks~sys_gra!start_today-7!end_today" chart="column" title="Number of jobs by run time on GraphIt! for last 7 days (run time > 2 hours, in hours)" stacking="normal" color="gra" vaxis="jobs" source="txt" descr="true"></request>
+</div>
+
+<h2>3. Активность пользователей </h2>
+<h3>3.1.1 число пользователей, задания которых запускались за последний день</h3>
+<div class="chart_container">
+  <div class="cell_2">
+    <div>
+      <request id="191c" file="nusers_run~sys_cheb!start_today-1" chart="Number" title="Number of users, who started jobs on Chebyshev last day"  source="txt" descr="true"></request>
+    </div>
+  </div>
+  <div class="cell_2">
+    <div>
+      <request id="191l" file="nusers_run~sys_lom!start_today-1" chart="Number" title="Number of users, who started jobs on Lomonosov last day" ></request>
+    </div>
+  </div>
+  <div class="cell_2">
+    <div>
+      <request id="191g" file="nusers_run~sys_gra!start_today-1" chart="Number" title="Number of users, who started jobs on GraphIt! last day" ></request>
+    </div>
+  </div>
+</div>
+
+
+<h3>3.1.3a Распределение числа уникальных пользователей, запустивших или поставивших в очередь задачи, по дням прошедшей недели</h3>
+<div class="toggable">
+  <request id="19c" file="users_queueorrunning_last_week~sys_cheb" chart="column" title="Number of users running or queueing jobs on Chebyshev last 7 days"  color="cheb" source="txt" descr="true" ></request>
+  <request id="19l" file="users_queueorrunning_last_week~sys_lom" chart="column" title="Number of users running or queueing jobs on Lomonosov last 7 days"  color="lom" source="txt" descr="true" ></request>
+  <request id="19" file="users_queueorrunning_last_week~sys_gra" chart="column" title="Number of users running or queueing jobs on Graphit! last 7 days"  color="gra" source="txt" descr="true"></request>
+</div>
+
+<h2>5. Топ пользователей</h2>
+<h3>по истраченным процессорочасам за прошедшую неделю</h3>
+<div class="toggable">
+
+      <request id="23c" file="top_users_CPU_time~sys_cheb!start_today-7!top_30" chart="pie" title="Top 30 users by total CPU time on Chebyshev last 7 days" color="cheb" source="txt" descr="true"></request>
+   
+  
+        <request id="23l" file="top_users_CPU_time~sys_lom!start_today-7!top_30" chart="pie" title="Top 30 users by total CPU time on Lomonosov last 7 days" color="lom" source="txt" descr="true"></request>
+      
+        <request id="23g" file="top_users_CPU_time~sys_gra!start_today-7!top_25" chart="pie" title="Top 25 users by total CPU time on GraphIt! last 7 days" color="gra" source="txt" descr="true"></request>
+      
+</div>
+<h3>по числу запущенных заданий за прошедшую неделю</h3>
+<div class="toggable">
+  
+        <request id="26c" file="top_users_jobs~sys_cheb!start_today-7!top_30" chart="pie" title="Top 30 users by jobs number on Chebyshev last 7 days" color="cheb" source="txt" descr="true"></request>
+      
+        <request id="26l" file="top_users_jobs~sys_lom!start_today-7!top_30" chart="pie" title="Top 30 users by jobs number on Lomonosov last 7 days" color="lom" source="txt" descr="true"></request>
+     
+        <request id="26g" file="top_users_jobs~sys_gra!start_today-7!top_25" chart="pie" title="Top 25 users by jobs number on GraphIt! last 7 days" color="gra" source="txt" descr="true"></request>
+      
+</div>
+
+
+<p></p>
+</body>
+</html>

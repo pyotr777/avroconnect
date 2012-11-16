@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Weekly report</title>
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>	
+  	<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    
+    <script type="text/javascript">
+    
+    // Load the Visualization API and the piechart package.
+    google.load('visualization', '1', {'packages':['corechart','table']});
+      
+    // Set a callback to run when the Google Visualization API is loaded.
+    google.setOnLoadCallback(initialize);
+      
+    function initialize() {
+		var query = new google.visualization.Query("readCSV");
+		query.send(handleQueryResponse);
+	}
+	
+	function handleQueryResponse(response) {
+		if (response.isError()) {
+		    alert( response.getMessage() + '\n' + response.getDetailedMessage());			
+		    return;
+	   	}				
+	   	data = response.getDataTable();
+	   	var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+		chart.draw(data, {});
+		var table = new google.visualization.Table(document.getElementById('table_div'));
+		table.draw(data, {showRowNumber: false});
+	}
+	  
+    </script>
+
+    
+</head>
+
+<body>
+<h1>Weekly report</h1>
+<div id="chart_div" style="overflow:hidden;width:100%;"></div>
+<div id="table_div" style=""></div>
+<hr />
+</body>
+</html>

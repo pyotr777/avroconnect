@@ -1,0 +1,30 @@
+pigquery=%default cf 'tasks_<<sys:gra>>'
+%default fstart_time <<start:1>>L
+%default fend_time <<end:1000000000000000>>L
+%default min_runtime 10
+%default ftp 'tqueued'
+%default resdir '/does/not/exist'
+	
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray, va:{t:(
+		n:bytearray, v:bytearray)});
+ts1 = FOREACH tsr {
+	 u = FILTER va BY n=='user';
+	 tf = FILTER va BY n=='$ftp';
+	 wt = FILTER va BY n=='waittime';
+	 rt = FILTER va BY n=='runtime';
+	 GENERATE k AS key, FLATTEN(u.v) AS user, FLATTEN(wt.v) AS waittime,
+		FLATTEN(rt.v) AS runtime, FLATTEN(tf.v) AS tfilter;
+};
+ts = FOREACH ts1 GENERATE key, user, (double)((long)waittime) AS waittime,
+	(double)((long)runtime) AS runtime, (double)((long)waittime) /
+		(double)((long)runtime) AS rel, ((long)tfilter) * 1000L AS tfilter;
+tsf = FILTER ts BY waittime > 0L AND runtime > 0L AND tfilter >= $fstart_time
+		AND tfilter < $fend_time AND runtime > $min_runtime;
+gu = GROUP tsf BY user;
+timerel = FOREACH gu GENERATE group AS user, AVG(tsf.rel) AS	avgrel;
+ordu = ORDER timerel BY avgrel DESC;
+STORE ordu INTO '$resdir' USING PigStorage(',');
+
+columns=user, avgwaittorun_num
+
+googlequery= select user, avgwaittorun limit 30

@@ -1,0 +1,10 @@
+pigquery =
+flow1 = group c by int(c.time/(1*1000000)) in memory_free where c.n == 0 and c.time > 1337748757000000 and c.time < 1337748929000000 and (  c.node == 'node-10-04' or c.node == 'node-45-08' )
+final
+yield time => int(c.time/1000), val => sum(c.value) / count(c.value), index => 1
+yield time => int(c.time/1000), val => max(c.value), index => 2
+yield time => int(c.time/1000), val => min(c.value), index => 3
+end
+print(order=time,val,index) flow1
+
+columns = time_datetime, avg_num, column

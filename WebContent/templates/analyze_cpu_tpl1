@@ -1,0 +1,22 @@
+cpu = group c by int ( c.time /10000000) in cpu_user where c.time > <<start_time:0>>
+ var sum
+ var count
+ var time
+ var min
+ var max
+
+ if c.time < <<end_time:0>> and <<nodes:none>>
+   sum = sum + c.value
+   count = count + 1
+   time = int ( c.time /10000000)
+   if max < c.value
+     max = c.value
+   end
+   min=0
+ end
+final
+ yield time => time*10000, num => min, avg => sum / count, max => max
+end
+
+print cpu
+

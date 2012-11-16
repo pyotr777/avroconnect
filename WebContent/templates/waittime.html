@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Weekly report- Waittime</title>
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>	
+<script type="text/javascript" src="/avroconnect/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/avroconnect/js/report.js"></script>
+<link rel="stylesheet" type="text/css" href="/avroconnect/css/styles.css">
+</head>
+
+<body>
+<h1>Weekly report</h1>
+<h2>1. сколько ожидают в среднем задачи</h2>
+
+<h3>распределение среднего времени ожидания по очередям за последние 7 дней</h3>
+
+<h4 class="filename" id="request01"></h4>
+<div><request id="01" file="day_avg_queue_wait_time~sys_cheb!start_today-7" chart="ColumnChart" title="Average waittime in queues on Chebyshev for last 7 days" isStacked="true" strictFirstColumnType="false"  color="cheb" vaxis="waittime (sec)"/></div>
+
+<h4 class="filename" id="request03"></h4>
+<div><request id="03" file="day_avg_queue_wait_time~sys_lom!start_today-7" chart="ColumnChart" title="Average waittime in queues on Lomonosov for last 7 days" isStacked="true" strictFirstColumnType="false" color="lom"  vaxis="waittime (sec)"/></div>
+
+<h4 class="filename" id="request05"></h4>
+<div><request id="05" file="day_avg_queue_wait_time~sys_gra!start_today-7" chart="ColumnChart" title="Average waittime in queues on GraphIt! for last 7 days" isStacked="true" strictFirstColumnType="false" color="gra"  vaxis="waittime (sec)"/></div>
+
+
+
+<h3>распределение времени ожидания всех задач по дням недели с начала года</h3>
+<h4 class="filename" id="request07"></h4>
+<div><request id="07" file="weekday_avgwaittime~sys_cheb!start_1325376000000" chart="ColumnChart" title="Average wait time on week days on Chebyshev from 01.01.2012" color="cheb" vaxis="waittime (sec)"/></div>
+
+<h4 class="filename" id="request08"></h4>
+<div>
+<request id="08" file="weekday_avgwaittime~sys_lom!start_1325376000000" chart="ColumnChart" title="Average wait time on week days on Lomonosov since 01.01.2012" color="lom" vaxis="waittime (sec)"/></div>
+
+<h4 class="filename" id="request09"></h4>
+<div class="chart_container"><request id="09" file="weekday_avgwaittime~sys_gra!start_1325376000000" chart="ColumnChart" title="Average wait time on week days on GraphIt! since 01.01.2012" color="gra" vaxis="waittime (sec)"/></div>
+
+
+<h3>распределение среднего времени ожидания по очередям с начала года</h3>
+<h4 class="filename" id="request10c"></h4>
+<div class="chart_container"><request id="10c" file="avgwaittime~sys_cheb!start_1325376000000" chart="ColumnChart" title="Average waittime in queue on Chebyshev since 01.01.2012" isStacked="true" color="cheb" vaxis="waittime (sec)"/></div>
+
+<h4 class="filename" id="request10l"></h4>
+<div class="chart_container"><request id="10l" file="avgwaittime~sys_lom!start_1325376000000" chart="ColumnChart" title="Average waittime in queue on Lomonosov since 01.01.2012" isStacked="true" color="lom" vaxis="waittime (sec)"/></div>
+
+<h4 class="filename" id="request10g"></h4>
+<div class="chart_container"><request id="10g" file="avgwaittime~sys_gra!start_1325376000000" chart="ColumnChart" title="Average waittime in queue on GraphIt! since 01.01.2012" isStacked="true" color="gra" vaxis="waittime (sec)"/></div>
+
+
+<h2>2. сколько задач в среднем находится в очереди на исполнение</h2>
+<h3>распределение числа задач ожидающих исполнения по дням прошедшей недели</h3>
+<h4 class="filename" id="request14c"></h4>
+<div class="chart_container"><request id="14c" file="avgquelength_lastweek~sys_cheb" chart="ColumnChart" title="Average queue length on Chebyshev last 7 days" isStacked="true" strictFirstColumnType="false"  vaxis="(jobs)"/></div>
+
+<h4 class="filename" id="request14l"></h4>
+<div class="chart_container"><request id="14l" file="avgquelength_lastweek~sys_lom" chart="ColumnChart" title="Average queue length on Lomonosov last 7 days" isStacked="true" strictFirstColumnType="false" vaxis="(jobs)" /></div>
+
+<h4 class="filename" id="request14g"></h4>
+<div class="chart_container"><request id="14g" file="avgquelength_lastweek~sys_gra" chart="ColumnChart" title="Average queue length on GraphIt! last 7 days" isStacked="true" color="gra" strictFirstColumnType="false" vaxis="(jobs)"/></div>
+
+
+<h3>распределение числа задач ожидающих исполнения по месяцам с начала года</h3>
+<h4 class="filename" id="request15c"></h4>
+<div class="chart_container"><request id="15c" file="avgquelength_months~sys_cheb" chart="ColumnChart" title="Month average queue length on Chebyshev since 01.01.2012" isStacked="true" hasLabelsColumn="true" vaxis="(jobs)"/></div>
+
+<h4 class="filename" id="request15l"></h4>
+<div class="chart_container"><request id="15l" file="avgquelength_months~sys_lom" chart="ColumnChart" title="Month average queue length on Lomonosov since 01.01.2012" isStacked="true" hasLabelsColumn="true" vaxis="(jobs)"/></div>
+
+<h4 class="filename" id="request15g"></h4>
+<div class="chart_container"><request id="15g" file="avgquelength_months~sys_gra" chart="ColumnChart" title="Month average queue length on GraphIt! since 01.01.2012" isStacked="true" hasLabelsColumn="true" color="gra" vaxis="(jobs)"/></div>
+
+
+<h3>распределение числа задач ожидающих исполнения по дням недели с начала года </h3>
+<h4 class="filename" id="request17c"></h4>
+<div class="chart_container"><request id="17c" file="avg_queue_length_weekdays_year~sys_cheb" chart="ColumnChart" title="Weekday average queue length on Chebyshev since 01.01.2012" isStacked="true" hasLabelsColumn="true" vaxis="(jobs)"/></div>
+
+<h4 class="filename" id="request17l"></h4>
+<div class="chart_container"><request id="17l" file="avg_queue_length_weekdays_year~sys_lom" chart="ColumnChart" title="Weekday average queue length on Lomonosov since 01.01.2012" isStacked="true" hasLabelsColumn="true" vaxis="(jobs)"/></div>
+
+<h4 class="filename" id="request17g"></h4>
+<div class="chart_container"><request id="17g" file="avg_queue_length_weekdays_year~sys_gra" chart="ColumnChart" title="Weekday average queue length on GraphIt! since 01.01.2012" isStacked="true" hasLabelsColumn="true" color="gra" vaxis="(jobs)"/></div>
+
+
+
+<h3>распределение числа задач ожидающих исполнения по времени суток (за каждый час) с начала года</h3>
+<h4 class="filename" id="request18c"></h4>
+<div class="chart_container"><request id="18c" file="avg_queue_length_hours_year~sys_cheb" chart="ColumnChart" title="Average number of jobs queued in a given hour of the day for each queue on Chebyshev since 01.01.2012" isStacked="true" hasLabelsColumn="true" vaxis="(jobs)"/></div>
+
+<h4 class="filename" id="request18l"></h4>
+<div class="chart_container"><request id="18l" file="avg_queue_length_hours_year~sys_lom" chart="ColumnChart" title="Average number of jobs queued in a given hour of the day for each queue on Lomonosov since 01.01.2012" isStacked="true" hasLabelsColumn="true" vaxis="(jobs)"/></div>
+
+<h4 class="filename" id="request18g"></h4>
+<div class="chart_container"><request id="18g" file="avg_queue_length_hours_year~sys_gra" chart="ColumnChart" title="Average number of jobs queued in a given hour of the day for each queue on Graphit! since 01.01.2012" isStacked="true" hasLabelsColumn="true" color="gra" vaxis="(jobs)"/></div>
+
+</body>
+</html>
