@@ -189,6 +189,8 @@ function format4pie(reqest_elm, data,custom_function,args) {
 
 function formatData4Line(data) {
 	var series = [];
+	//var max_x = null;
+	//var min_x = null;
 	var first_column_type = "number";
 	var lines = data.split('\n');
 	for (var i=0; i<lines.length; i++) {
@@ -212,13 +214,26 @@ function formatData4Line(data) {
 			for (var j=1; j<items.length; j++) {
 				var dat = parseFloat(items[j]);
 				if (dat == null) dat = 0;
-				if (first_column_type == "time") {					
-					series[j-1].data.push([parseTime(items[0]),dat]);
-				} else if (first_column_type == "datetime") {
-					series[j-1].data.push([parseDate(items[0]),dat]);
+				var x_pos = 0;
+				if (first_column_type == "time") {
+					x_pos = parseTime(items[0]);					
+				} 
+				else if (first_column_type == "datetime") {
+					x_pos = parseDate(items[0]);
 				}
-				else if (first_column_type == "number") series[j-1].data.push([parseFloat(items[0]),dat]);
-				else series[j-1].data.push([items[0],dat]);
+				else if (first_column_type == "number") {
+					x_pos = parseFloat(items[0]);
+				}
+				else {
+					x_pos = items[0];
+				}
+				if (first_column_type == "time" || first_column_type == "datetime" || first_column_type == "number") {
+					if (maxtime==null) maxtime = the_time;
+					else if (the_time > maxtime) maxtime = the_time;
+					if (mintime==null) mintime = the_time;
+					else if (the_time < mintime) mintime = the_time;
+				}
+				series[j-1].data.push([x_pos,dat]);
 			}
 		}		
 	}	
@@ -230,13 +245,13 @@ function formatData4MultiLine(data,names_s) {
 //  Data format must be as follows:
 //  TIMEOFDAY / DATETIME, value:NUMBER, series_number:NUMBER
 	
-	var first_column_type = "number";
+	var first_column_type = "number";		// Type of first column in data file
 	var lines = data.split('\n');
 	var names = names_s.split(",");
 	var number_correction = 1;  // If the smallest series number in CSV file is 1, must use number-1 for actual series numbers
 	var redo = true;
-	var maxtime = null;
-	var mintime = null;
+	var max_x = null;
+	var min_x = null;
 	
 	// Initialization with number of names set in names_s
 	var series = [];
@@ -253,18 +268,13 @@ function formatData4MultiLine(data,names_s) {
 			var line = lines[i];
 			var items = line.split(',');
 			if (i==0) {
-				var first_element_parts = items[0].split(':');
-				if (first_element_parts.length > 1 && first_element_parts[1] != null) {
-					first_column_type = first_element_parts[1];
-					var time_pattern = /timeofday/i;
-					var datetime_pattern = /datetime/i;
-					if (first_column_type.search(time_pattern) >= 0) {  // First column in data file - datetime or timeofday
-						 first_column_type = "time"; // TIMEOFDAY
-					} else if (first_column_type.search(datetime_pattern) >= 0) {  // First column in data file - datetime or timeofday
-						 first_column_type = "datetime"; // DATETIME
-					}	
-				}
-				else first_column_type = "datetime";						
+				var time_pattern = /timeofday/i;
+				var datetime_pattern = /datetime/i;
+				if (items[0].search(time_pattern) >= 0) {  			
+					 first_column_type = "time"; // TIMEOFDAY
+				} else if (items[0].search(datetime_pattern) >= 0) {  	
+					 first_column_type = "datetime"; // DATETIME
+				} 			
 			} else {			
 				series_number = parseInt(items[2]) - number_correction;   //  Number of the series
 				if (isNaN(series_number)) continue;
@@ -274,23 +284,29 @@ function formatData4MultiLine(data,names_s) {
 					break;
 				}				
 				// insert new element into series			
-				var the_time = 0;
-				if (first_column_type == "time") {					
-					the_time = parseTime(items[0]);
-				} else if (first_column_type == "datetime") {
-					the_time = parseDate(items[0]);
-				}			
-				if (maxtime==null) maxtime = the_time;
-				else if (the_time > maxtime) maxtime = the_time;
-				if (mintime==null) mintime = the_time;
-				else if (the_time < mintime) mintime = the_time;
+				var x_pos = 0;
+				if (first_column_type == "time") {
+					x_pos = parseTime(items[0]);					
+				} 
+				else if (first_column_type == "datetime") {
+					x_pos = parseDate(items[0]);
+				}
+				else 		// first_column_type == "number" 
+				{ 		
+					x_pos = parseFloat(items[0]);
+				}
+							
+				if (max_x == null) max_x = x_pos;
+				else if (x_pos > max_x) max_x = x_pos;
+				if (min_x == null) min_x = x_pos;
+				else if (x_pos < min_x) min_x = x_pos;
 				
 				if (typeof series[series_number] == "undefined") series[series_number] = {name:"line "+series_number, data: [null]};
-				series[series_number].data.push([the_time,parseFloat(items[1])]);			
+				series[series_number].data.push([x_pos,parseFloat(items[1])]);			
 			}		
 		}	
 	}	
-	return {series:series,timespan: maxtime-mintime,first_column_type:first_column_type};
+	return {series:series,max: max_x, min: min_x, first_column_type:first_column_type};
 }
 
 
@@ -631,6 +647,25 @@ function initialOptions() {
 	};
 }
 
+var charts = new Array();
+
+var selectFunction = function(event) {
+	if (event.xAxis && event.xAxis.length > 0) {
+		for (var i=0; i < charts.length; i++) {
+			charts[i].xAxis.plotBands  = [{
+				color: '#fcffc5',
+				from: event.xAxis[0].min,
+				to: event.xAxis[0].max
+			}];
+			charts[i].redraw();
+		}
+	}
+	for (var i=0; i < charts.length; i++) {
+		charts[i].xAxis.plotBands  = null;
+		charts[i].redraw();
+	}
+	
+};
 
 /*
  * Set Highcharts parameters in c_options variable.
@@ -651,7 +686,7 @@ function setOptions(reqest_elm,custom_parameters,data) {
 	var c_options = initialOptions();
 	
 	var id = jQuery(reqest_elm).attr("id");
-	c_options.chart.renderTo = id;
+	c_options.chart.renderTo = id;	
 	c_options.title.text = jQuery(reqest_elm).attr("title");
 	
 	
@@ -738,8 +773,84 @@ function setOptions(reqest_elm,custom_parameters,data) {
 			formattedData = format4pie(reqest_elm,data,custom_function,args);
 			c_options.series.push({type:'pie', name: 'name', data : formattedData});			
 			break;
-		case "line": 					
-			c_options.chart.zoomType = 'xy';
+		case "line": 				
+			if (jQuery(reqest_elm).attr("indexed") == null) {  // Simple line chart 
+				formattedData = formatData4Line(data);							
+			} else {   // MULTILINE chart :  3rd column in data tanle - index of line. Draw several lines based on data from 1st and 2nd data table columns.
+				var names = jQuery(reqest_elm).attr("names");				
+				formattedData = formatData4MultiLine(data,names);
+			}			
+			if (jQuery(reqest_elm).attr("theme")!=null) setTheme(jQuery(reqest_elm).attr("theme"));
+			c_options.series = formattedData.series;
+			
+			if (jQuery(reqest_elm).attr("step")!=null && jQuery(reqest_elm).attr("step")=="true") {
+				c_options.chart.type = 'line';
+				// Check that series is not null
+				for (var i = 0; i < c_options.series.length; i++) {
+					if (typeof c_options.series[i] == 'undefined') c_options.series[i] = {};
+				}
+				$.each(c_options.series, function(i,series) {
+					series.step = true;						
+				});
+			}
+			else {
+				c_options.chart.type = 'spline';
+				c_options.plotOptions.spline = {
+					lineWidth: 1,
+					states: {
+						hover: {
+							lineWidth: 2								
+						}
+					},
+					marker: {enabled: false}
+				};					
+			}
+			//alert("timespan:"+formattedData.timespan);
+			
+			if (c_options.series.length < 1) {
+				//alert("Empty data file: " +file);
+				$("#"+id).html("<div class='empty'>Null data</div>");
+				//jQuery(reqest_elm).remove();					
+				return;
+			}
+			var type = formattedData.first_column_type;
+			if (type == "datetime") 
+			{
+				c_options.xAxis.labels = { 
+					formatter: function() {
+						return Highcharts.dateFormat('<span style="color:#444">%b %d</span><br>%H:%M:%S', this.value);// +':'+this.value%1000;						
+					},
+					step: 1,						
+					rotation: -45,
+					y: 30
+				};	
+				c_options.tooltip = {
+						formatter : function() {	
+							return Highcharts.dateFormat('%Y %b %d %H:%M:%S', this.x)+'<br/><b>'+ this.series.name + ' = '+ this.y+'</b>';
+						}
+				};
+			}					
+			else if (type == "time") 
+			{
+				c_options.xAxis.labels = { 
+					formatter: function() {
+						return Highcharts.dateFormat('%H:%M:%S', this.value);// +':'+this.value%1000;						
+					},
+					step: 1,						
+					rotation: -45,
+					y: 30
+				};						
+				c_options.tooltip = {
+					formatter : function() {	
+						return Highcharts.dateFormat('%H:%M:%S', this.x)+'.'+(this.x%1000)+'<br/><b>'+ this.series.name + ' = '+ this.y+'</b>';
+					}
+				};
+			}
+			if (!c_options.colors) c_options.colors = ['#0296C2','#629E02','#E38900','#75BF63','#829DE0'];
+			
+			
+			c_options.chart.zoomType = 'x';
+			c_options.chart.events = {selection : selectFunction};
 			c_options.plotOptions.line  = {				
 				lineWidth: 1,
 				shadow:false,
@@ -747,190 +858,51 @@ function setOptions(reqest_elm,custom_parameters,data) {
 					hover: {
 						lineWidth: 2								
 					}
-				},
-				marker: {
+				},				
+				pointInterval: 100
+			};			
+			c_options.plotOptions.series = {
+				shadow: false,
+				marker : {
 					enabled: false,
 					states: {
 						hover: {
 							enabled: true,
-							symbol:'circle',
 							radius: 3,
 							lineWidth:1
 						}
 					}
-				},
-				pointInterval: 100
-			};
-			c_options.xAxis.type = 'datetime';
-			c_options.xAxis.labels = { 
-				formatter: function() {
-					return Highcharts.dateFormat('%H:%M:%S', this.value);// +':'+this.value%1000;
-				},
-				step: 5,						
-				rotation: -30,
-				y: 30
-			};	
-			//c_options.xAxis.tickInterval = tickStep;
-			c_options.tooltip = {
-				formatter: function() {	
-					var type = c_options.first_column_type; // first_column_type is set later, when data rrrives.
-					var date = "";
-					if (type == "datetime") date = "["+Highcharts.dateFormat('%Y.%b.%d', this.x)+"] ";
-						return '<b>'+ this.series.name +'</b><br/>'+ date +
-							Highcharts.dateFormat('%H:%M:%S', this.x) +'.'+(this.x%1000)+' = '+ this.y;
 				}
+			};
+			c_options.xAxis.type = type;
+			c_options.chart.spacingBottom = 5;
+			c_options.chart.marginBottom = 100;		
+			c_options.legend = {
+				align:'left',
+				verticalAlign: 'bottom',
+				y:0,
+				x:50,
+				floating: true,
+				borderWidth:0,
+				backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColorSolid) || null
 			};
 			
-			if (jQuery(reqest_elm).attr("indexed") == null) {  // Simple line chart 
-				formattedData = formatData4Line(data);	
-				c_options.series = formattedData.series;
-				if (jQuery(reqest_elm).attr("step")!=null) {
-					c_options.series.step = true;
-				}
-				c_options.first_column_type = formattedData.first_column_type;
-				
-				if (c_options.series[0] == null) {
-					$("#"+id).html("<div class='empty'>Null data</div>");
-					return;
-				}
-				var tickStep = 10* 60 * 1000; // 10 min
-				if (end_time - start_time > 0) tickStep = calculateTickStep(end_time - start_time);
-				else if (formattedData.timespan!=null && formattedData.timespan>0) tickStep = calculateTickStep(formattedData.timespan); 
-				//var minorTickInterval = tickStep/10;
-				
-				c_options.xAxis.tickInterval = tickStep;
-				c_options.tooltip.formatter = function() {	
-					var type = c_options.first_column_type;
-					var date = "";
-					if (type == "datetime") date = "["+Highcharts.dateFormat('%Y.%b.%d', this.x)+"] ";
-						return '<b>'+ this.series.name +'</b><br/>'+ date +
-							Highcharts.dateFormat('%H:%M:%S', this.x) +'.'+(this.x%1000)+' = '+ this.y;
-				};
-				if (!c_options.colors) c_options.colors = ['#0296C2','#629E02','#E38900','#75BF63','#829DE0'];				
-			} else {   // MULTILINE chart :  3rd column in data tanle - index of line. Draw several lines based on data from 1st and 2nd data table columns.
-				var names = jQuery(reqest_elm).attr("names");				
-				formattedData = formatData4MultiLine(data,names);	
-				if (jQuery(reqest_elm).attr("theme")!=null) setTheme(jQuery(reqest_elm).attr("theme"));
-				c_options.series = formattedData.series;
-				if (jQuery(reqest_elm).attr("step")!=null && jQuery(reqest_elm).attr("step")=="true") {
-					c_options.chart.type = 'line';
-					// Check that series is not null
-					for (var i = 0; i < c_options.series.length; i++) {
-						if (typeof c_options.series[i] == 'undefined') c_options.series[i] = {};
-					}
-					$.each(c_options.series, function(i,series) {
-						series.step = true;						
-					});
-				}
-				else {
-					c_options.chart.type = 'spline';
-				}
-				//alert("timespan:"+formattedData.timespan);
-				
-				if (c_options.series.length < 1) {
-					//alert("Empty data file: " +file);
-					$("#"+id).html("<div class='empty'>Null data</div>");
-					//jQuery(reqest_elm).remove();					
-					return;
-				}
-				
-				jQuery.extend(c_options.plotOptions.series,{
-					marker: {
-						enabled: false,
-						states: {
-						   hover: {
-								enabled: true
-							}
-						}
-					}
-				});
-				
-				jQuery.extend(c_options.plotOptions.spline,{
-					lineWidth: 1,
-					states: {
-						hover: {
-							lineWidth: 2								
-						}
-					}
-				});
-				
-				jQuery.extend(c_options.plotOptions.marker,{
-					enabled: false,
-					states: {
-						hover: {
-							enabled: true,
-							symbol:'circle',
-							radius: 2,
-							lineWidth:1
-						}
-					}
-				});
-				jQuery.extend(c_options.plotOptions.line, {
-					lineWidth: 1
-				});
-				
-				c_options.xAxis.type = 'datetime';
-				c_options.chart.spacingBottom = 5;
-				c_options.chart.marginBottom = 100;		
-				c_options.legend = {
-					align:'left',
-					verticalAlign: 'bottom',
-					y:10,
-					x:50,
-					floating: true,
-					borderWidth:0,
-					backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColorSolid) || null
-				};
-				
-				var tickStep = 10* 60 * 1000; // 10 min
-				if (end_time - start_time > 0) tickStep = calculateTickStep(end_time - start_time);
-				else if (formattedData.timespan!=null && formattedData.timespan>0) tickStep = calculateTickStep(formattedData.timespan); 
-				var minorTickInterval = tickStep/10;
-				
-				c_options.xAxis.tickInterval = tickStep;
-				c_options.xAxis.minorTickInterval = minorTickInterval;
-				c_options.xAxis.minorGridLineWidth = 1;
-				c_options.xAxis.minorTickPosition= 'inside';
-				c_options.xAxis.minorTickWidth= 1;
-				c_options.xAxis.minorTickColor= '#fff';
-				
-				
-				var type = formattedData.first_column_type;
-				if (type == "datetime") 
-				{
-					c_options.xAxis.labels = { 
-						formatter: function() {
-							return Highcharts.dateFormat('<span style="color:#444">%b %d</span><br>%H:%M:%S', this.value);// +':'+this.value%1000;						
-						},
-						step: 1,						
-						rotation: -45,
-						y: 30
-					};	
-					c_options.tooltip.formatter = function() {	
-						//var type = c_options.first_column_type;
-						//var date = "";
-						//date = "["+Highcharts.dateFormat('%Y.%b.%d', this.x)+"] ";
-						return Highcharts.dateFormat('%Y %b %d %H:%M:%S', this.x)+'<br/><b>'+ this.series.name + ' = '+ this.y+'</b>';
-					};
-				}					
-				else if (type == "time") 
-				{
-					c_options.xAxis.labels = { 
-						formatter: function() {
-							return Highcharts.dateFormat('%H:%M:%S', this.value);// +':'+this.value%1000;						
-						},
-						step: 1,						
-						rotation: -45,
-						y: 30
-					};						
-					c_options.tooltip.formatter = function() {	
-						//var type = c_options.first_column_type;
-						//var date = "";
-						return Highcharts.dateFormat('%H:%M:%S', this.x)+'.'+(this.x%1000)+'<br/><b>'+ this.series.name + ' = '+ this.y+'</b>';
-					};
-				}
-				if (!c_options.colors) c_options.colors = ['#0296C2','#629E02','#E38900','#75BF63','#829DE0'];
+			var tickStep = 10* 60 * 1000; // 10 min
+			if (end_time != null && start_time != null && end_time - start_time > 0) {
+				tickStep = calculateTickStep(end_time - start_time);
+				c_options.xAxis.min = start_time;
+				c_options.xAxis.max = end_time;
 			}
+			else if (formattedData.min !=null && formattedData.max !=null && formattedData.max - formattedData.min > 0) {
+				tickStep = calculateTickStep(formattedData.max - formattedData.min);
+				c_options.xAxis.min = formattedData.min;
+				c_options.xAxis.max = formattedData.max;
+			}
+			
+			c_options.xAxis.tickInterval = tickStep;
+			c_options.xAxis.gridLineWidth = 1;
+			c_options.xAxis.gridLineColor = "#DFDFDF";
+			
 			break;
 		case "bar":
 			formattedData = formatCSVdata(reqest_elm,data,c_options.yAxis.title.text,custom_function,args);
@@ -979,18 +951,12 @@ function setOptions(reqest_elm,custom_parameters,data) {
 		jQuery.extend(c_options[parameter.name], parameter.value);
 	});
 	
-	
 	// remove request tags
-	hideElement(reqest_elm);
-	
-	new Highcharts.Chart(c_options);
+	hideElement(reqest_elm);	
+	charts.push(new Highcharts.Chart(c_options));
 }
 
 
-function multilinePlotOptions() {
-	
-	
-}
 
 
 /*
@@ -1384,7 +1350,7 @@ function setTheme(theme_name) {
 	};
 	
 	// Apply the theme
-	var highchartsOptions = Highcharts.setOptions(Highcharts.theme);
+	Highcharts.setOptions(Highcharts.theme);
 }
 
 

@@ -154,8 +154,8 @@ function processRequest(reqest_elm)
 			if (file.indexOf("~") > 0 ) txtfilename = file.substring(0,file.indexOf("~"));
 			var URL = document.URL;
 			URL = URL.substring(0,URL.lastIndexOf("/")+1);
-			//if (file.length > 1) file = file.substring(1);
-			if (data.length < 2) {
+			
+			if (data.length < 1) {
 				if (jQuery(reqest_elm).attr("short")==null) { 
 					var h4id = create_headers(id,"<a href=\""+URL+file+"\" target=\"_blank\" title='open CSV file \""+file+"\"'>"+txtfilename+"</a>");
 					$("#"+h4id).addClass("filename");
@@ -177,13 +177,9 @@ function processRequest(reqest_elm)
 			if (data.indexOf("--") == 0) {
 				message = format_error_reply(data);
 				$("#"+id).html("<div class='error'>"+message+"</div>");
-				//jQuery(reqest_elm).remove();
 				hideElement(reqest_elm);
 				return;
 			}
-			
-		
-			// HIGHCHARTS specific: c_options 
 			var custom_pars = new Array();
 			custom_pars = [{name:"chart", value:{marginBottom:80}},{name:"legend", value:{y:0}}, {name:"xAxis",value:{gridLineWidth:1, gridLineColor:"#DFDFDF"}}];
 			

@@ -13,6 +13,7 @@ WebContent/css/buttons/
 _*/
 *.zip
 *.dat
+*.class
 
 #################
 ## Eclipse
