@@ -30,8 +30,9 @@ $(document).ready(function()
 	
 // Initialize with correct values for timeofday-typed x-axis charts
 	if (start_time != null) {
-		var localOffset = start_time.getTimezoneOffset() * 60000;
-		var UTC_start = new Date(start_time.getTime() + localOffset);
+		var start_date = new Date(start_time);
+		var localOffset = start_date.getTimezoneOffset() * 60000;
+		var UTC_start = new Date(start_date.getTime() + localOffset);
 		year_dummy = UTC_start.getFullYear();
 		month_dummy = UTC_start.getMonth();
 		day_dummy = UTC_start.getDate();
@@ -186,8 +187,8 @@ function processRequest(reqest_elm)
 			
 			// Check start and end time in report template HTML file
 			// If tags with <.. id="start_time"> and <.. id="end_time"> exist and are not empty, set start end end time for xAxis
-			if (start_time != null) custom_pars.push({name:"xAxis",value:{min:start_time}});
-			if (end_time != null) custom_pars.push({name:"xAxis",value:{max:end_time}});
+			//if (start_time != null) custom_pars.push({name:"xAxis",value:{min:start_time}});
+			//if (end_time != null) custom_pars.push({name:"xAxis",value:{max:end_time}});
 				
 			
 			setOptions(reqest_elm,custom_pars,data);			

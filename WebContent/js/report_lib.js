@@ -647,25 +647,43 @@ function initialOptions() {
 	};
 }
 
+// List of rendered charts
 var charts = new Array();
 
+/*
+ * Function to execute on selecting areas inside charts.
+ */
 var selectFunction = function(event) {
-	if (event.xAxis && event.xAxis.length > 0) {
-		for (var i=0; i < charts.length; i++) {
-			charts[i].xAxis.plotBands  = [{
+	if (start_time == null || end_time==null) return;
+	if (event.xAxis && event.xAxis.length > 0) {		
+		clearAllSelections(this);
+		for (var i=0; i < charts.length; i++) {			
+			charts[i].xAxis[0].addPlotBand({
 				color: '#fcffc5',
 				from: event.xAxis[0].min,
-				to: event.xAxis[0].max
-			}];
-			charts[i].redraw();
+				to: event.xAxis[0].max,
+				id: 'selection'
+			});		
+		}
+	} else {
+		for (var i=0; i < charts.length; i++) {
+			charts[i].xAxis[0].removePlotBand('selection');
+		}
+	}	
+};
+
+function clearAllSelections(chart) {
+	for (var i=0; i < charts.length; i++) {
+		if (chart !== charts[i]) {
+			charts[i].xAxis[0].setExtremes( null, null, false );
+	        charts[i].redraw();			
+	        if (charts[i].resetZoomButton != null) charts[i].resetZoomButton.hide();
+		} else {
+			if (charts[i].resetZoomButton != null) charts[i].resetZoomButton.show();
 		}
 	}
-	for (var i=0; i < charts.length; i++) {
-		charts[i].xAxis.plotBands  = null;
-		charts[i].redraw();
-	}
-	
-};
+}
+
 
 /*
  * Set Highcharts parameters in c_options variable.
@@ -825,9 +843,9 @@ function setOptions(reqest_elm,custom_parameters,data) {
 					y: 30
 				};	
 				c_options.tooltip = {
-						formatter : function() {	
-							return Highcharts.dateFormat('%Y %b %d %H:%M:%S', this.x)+'<br/><b>'+ this.series.name + ' = '+ this.y+'</b>';
-						}
+					formatter : function() {	
+						return Highcharts.dateFormat('%Y %b %d %H:%M:%S', this.x)+'<br/><b>'+ this.series.name + ' = '+ this.y+'</b>';
+					}
 				};
 			}					
 			else if (type == "time") 
@@ -850,7 +868,7 @@ function setOptions(reqest_elm,custom_parameters,data) {
 			
 			
 			c_options.chart.zoomType = 'x';
-			c_options.chart.events = {selection : selectFunction};
+			c_options.chart.events = {selection : selectFunction };
 			c_options.plotOptions.line  = {				
 				lineWidth: 1,
 				shadow:false,
@@ -947,9 +965,9 @@ function setOptions(reqest_elm,custom_parameters,data) {
 	}
 	
 	// Set custom parameters	
-	$.each(custom_parameters, function(index, parameter) {
-		jQuery.extend(c_options[parameter.name], parameter.value);
-	});
+//	$.each(custom_parameters, function(index, parameter) {
+//		jQuery.extend(c_options[parameter.name], parameter.value);
+//	});
 	
 	// remove request tags
 	hideElement(reqest_elm);	
@@ -1357,16 +1375,13 @@ function setTheme(theme_name) {
 function time4axis(time) {
 	if (time == null || time.length < 1) return null;	
 	// time - epoch time in seconds
-	var date = new Date(time*1000); //  constructor needs time in milliseconds
+	var date = time*1000; 	//  time in milliseconds
 	// correct time zone offset
-	var offset_minutes = date.getTimezoneOffset();
+	var offset_minutes = new Date().getTimezoneOffset();
 	//alert("offset: "+offset_minutes);
 	if (offset_minutes != 0) {
 		var correction = offset_minutes * 60 * 1000; // correction time in milliseconds
-		date = new Date((time*1000) - correction);
-	}
-	if (isNaN(date.getTime())) {
-		return null;
+		date = date - correction;
 	}
 	return date;
 }
