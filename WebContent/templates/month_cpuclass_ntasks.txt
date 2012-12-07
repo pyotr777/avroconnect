@@ -31,6 +31,6 @@ res = FOREACH g GENERATE group.cpuclass AS cpuclass, group.time AS time,
 	COUNT(tsa) AS ntasks;
 STORE res INTO '$resdir' USING PigStorage(',');
 
-columns=cpuclass, month_month, ntasks_num
+columns=cpuclass, month_num, ntasks_num
 
 googlequery=select month, avg(ntasks) group by month pivot cpuclass

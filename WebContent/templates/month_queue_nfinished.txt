@@ -25,6 +25,6 @@ g1 = GROUP tsf BY (queue, $timefun(tend));
 res = FOREACH g1 GENERATE group.$0 AS queue, group.$1 AS time, COUNT(tsf) AS ntasks;
 STORE res INTO '$resdir' USING PigStorage(',');
 
-columns=queue, month_month, nfinished_num
+columns=queue, month_num, nfinished_num
 
 googlequery=select month, avg(nfinished) group by month pivot queue
