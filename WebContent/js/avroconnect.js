@@ -78,7 +78,7 @@
     					block = block.substring(1);
     					continue;
     				}
-    				command = block.substring(0,p-1);
+    				var command = block.substring(0,p);
     				if (command.indexOf("longtitle")>=0) {
 						longtitle = trimString(command.substring(command.indexOf("=")+1));
 					} else if (command.indexOf("pigquery")>=0) {
@@ -180,6 +180,7 @@
 	}
     
     function trimString(s) {
+    	s = s.replace("\n","");
     	return s.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
     }
     

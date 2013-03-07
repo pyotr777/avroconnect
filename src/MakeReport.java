@@ -39,7 +39,7 @@
  * or from HTTP request parameters. 	
  * 			 
  * Workflow:
- *  1. Receive request form web client.
+ *  1. Receive request from web client.
  *  2. Read configuration file
  *  3. Create folder for writing report, data files, log files, etc.
  *  4. Read report template file.
@@ -160,7 +160,7 @@ public class MakeReport extends HttpServlet {
 		try {
 // 2. 
 // Read configuration file			
-			requestor = new RequestHelper(conf_path);
+			requestor = new RequestHelper(conf_path,getServletContext());
 		}
 		catch (Exception e) {
 			setErrorResponse(log_writer,"Error reading config file "+conf_path+". "+e.getMessage(), http_request, response, null);

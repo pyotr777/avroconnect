@@ -1,3 +1,8 @@
+/* This program is a part of Visualization module of HOPSA project.
+ * 
+ * Read preconfigured requests (sets of pig and GQL queries) from queries.txt file
+ */
+
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.HttpServlet;

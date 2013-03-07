@@ -76,10 +76,10 @@ public class Avroconnect extends HttpServlet {
 // 
 // Note: Parsing config file cannot be done in init() method, because "conf" parameter can differ from one HTTP request to another, 
 // but variables set in init() method are shared among all instances and threads.
-			requestor = new RequestHelper(conf_path);
+			requestor = new RequestHelper(conf_path, getServletContext());
 		}
 		catch (Exception e) {
-			log_writer.setErrorResponse("Error reading config file "+conf_path+". "+e.getMessage(), request, response, null);	
+			log_writer.setErrorResponse("Error in requestor (reading config file "+conf_path+".) "+e.getMessage(), request, response, null);	
 			return;
 		}
 		

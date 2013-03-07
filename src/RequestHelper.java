@@ -26,6 +26,8 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.ServletContext;
+
 import org.apache.avro.Protocol;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
@@ -39,7 +41,7 @@ import com.google.visualization.datasource.datatable.ColumnDescription;
 import com.google.visualization.datasource.datatable.DataTable;
 import com.google.visualization.datasource.util.CsvDataSourceHelper;
 
-class RequestHelper {
+class RequestHelper { 
 	
 // Important variables initialized with default values
 	public String address = "cluster.parallel.ru:19099/";
@@ -52,7 +54,7 @@ class RequestHelper {
 	static final private Pattern hr_p = Pattern.compile("header row:\\s*(\\w+)");
 	
 // Static Avro protocol and schema attributes with initialization 
-	final private String protocol_filename =  "webapps/avroconnect/queryserver.avpr";
+	final private String protocol_filename =  "queryserver.avpr";
 	final private String sch = "{" +		
 		" 	\"namespace\": \"hopsa\"," +
 		" 	\"type\":\"record\"," +
@@ -83,7 +85,7 @@ class RequestHelper {
  * header row: true
  * ----------------------------- 
  */	
-	public RequestHelper(String conf_path) throws FileNotFoundException, MalformedURLException, IOException {	
+	public RequestHelper(String conf_path, ServletContext servlet_context) throws FileNotFoundException, MalformedURLException, IOException {	
 		String line;
 		if (conf_path.indexOf(".txt.txt") > 0) conf_path = conf_path.replaceAll(".txt.txt", ".txt");
 		FileReader conffile = new FileReader(conf_path);
@@ -117,7 +119,7 @@ class RequestHelper {
 		this.pars_s = Schema.parse(this.sch);
 		this.pars = new GenericData.Record(pars_s);
 		
-		this.protocol_file = new File(protocol_filename);  	
+		this.protocol_file = new File(servlet_context.getRealPath(protocol_filename));  	
 		this.prtl = Protocol.parse(this.protocol_file);		
 		this.trans = new HttpTransceiver(this.url);
 		this.trans.setTimeout(this.timeout);

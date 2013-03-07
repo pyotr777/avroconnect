@@ -605,6 +605,33 @@ lpacks = ORDER packs BY nusers DESC;
 topacks = LIMIT lpacks $ntop;
 STORE topacks INTO '$resdir' USING PigStorage(',');
 
+shorttitle = CPU time 
+longtitle = CPU time used by users in GPU queue 
+columns = user, queue, tqueued_datetime, cputime_num_cpusec 
+pigquery = 
+%default cf 'tasks_lom'
+%default fstart_time 1325376000000L
+%default fend_time 1356912000000L
+%default ftp 'tqueued'
+%default resdir '/does/not/exist'
+tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray, va:{t:(
+    n:bytearray, v:bytearray)});
+ts1 = FOREACH tsr {
+   u = FILTER va BY n=='user';
+   q = FILTER va BY n=='queue';
+   tq = FILTER va BY n=='tqueued';
+   ct = FILTER va BY n=='cputime';
+   GENERATE  FLATTEN(u.v) AS user, FLATTEN(q.v) AS queue, 
+	 FLATTEN(tq.v) AS tqueued, FLATTEN(ct.v) AS cputime;
+};
+ts = FOREACH ts1 GENERATE user, queue, 
+	 ((long)tqueued) * 1000L AS tqueued, (long)cputime;
+ts2 = FILTER ts BY queue == 'gpu';
+tsf = FILTER ts2 BY $ftp >= $fstart_time AND $ftp < $fend_time;
+STORE tsf INTO '$resdir' USING PigStorage(',');
+
+googlequery = select user, sum(cputime) group by user
+
 
 
 shorttitle = Jobs

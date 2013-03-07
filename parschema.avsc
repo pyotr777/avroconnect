@@ -1,9 +1,0 @@
-﻿{
-	"namespace": "hopsa",
-	"type":"record",
-	"name":"doQuery",
-	"fields": [
-		{"name" : "query", "type" : "string"},
-		{"name" : "pars", "type" : {"type" : "map", "values" : "string"}}
-	]
-}
