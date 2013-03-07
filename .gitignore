@@ -2,10 +2,8 @@
 ## OTHER
 ##
 
-lib/
 pig/
 WebContent/_notes/
-WebContent/META-INF/
 WebContent/reports/
 WebContent/css/buttons/
 *backup*
