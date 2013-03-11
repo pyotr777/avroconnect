@@ -493,6 +493,26 @@ function setOptions(reqest_elm,custom_parameters,data) {
 	if (jQuery(reqest_elm).attr("chart")!=null) {
 		chartType = jQuery(reqest_elm).attr("chart");
 	}	
+	
+	if (jQuery(reqest_elm).attr("stacking")!=null) {
+		c_options.plotOptions.column.stacking = jQuery(reqest_elm).attr("stacking");
+	}
+	if (jQuery(reqest_elm).attr("vaxis")!=null) {
+		c_options.yAxis.title.text = jQuery(reqest_elm).attr("vaxis");
+	}
+	if (jQuery(reqest_elm).attr("color")!=null) {
+		c_options.colors = colors[jQuery(reqest_elm).attr("color")];
+	}
+	if (!c_options.colors) c_options.colors = default_line_colors;
+	if (jQuery(reqest_elm).attr("labelRotation") != null) {
+		var angle = parseInt(jQuery(reqest_elm).attr("labelRotation"));
+		c_options.xAxis.labels = {
+			rotation : angle,
+			align:'right'
+		};
+		c_options.chart.marginBottom = 120;
+	}
+	
 	c_options.series.type = chartType;
 	
 	if (chartType == "Number") {
@@ -666,24 +686,7 @@ function setOptions(reqest_elm,custom_parameters,data) {
 	}
 	
 	
-	if (jQuery(reqest_elm).attr("stacking")!=null) {
-		c_options.plotOptions.column.stacking = jQuery(reqest_elm).attr("stacking");
-	}
-	if (jQuery(reqest_elm).attr("vaxis")!=null) {
-		c_options.yAxis.title.text = jQuery(reqest_elm).attr("vaxis");
-	}
-	if (jQuery(reqest_elm).attr("color")!=null) {
-		c_options.colors = colors[jQuery(reqest_elm).attr("color")];
-	}
-	if (!c_options.colors) c_options.colors = default_line_colors;
-	if (jQuery(reqest_elm).attr("labelRotation") != null) {
-		var angle = parseInt(jQuery(reqest_elm).attr("labelRotation"));
-		c_options.xAxis.labels = {
-			rotation : angle,
-			align:'right'
-		};
-		c_options.chart.marginBottom = 120;
-	}
+	
 	
 	// Set custom parameters	
 	$.each(custom_parameters, function(index, parameter) {
@@ -824,6 +827,7 @@ function formatCSVdata(reqest_elm, data,vaxis,custom_function,args) {
 							}
 							if (isNaN(d)) d = 0;
 							if (series[itemN-1] == undefined) series.push({name:item, data: []});
+							else series[itemN-1].name = changeUnits(series[itemN-1].name,units);
 							series[itemN-1].data.push(d);
 						}
 					}	
@@ -1433,4 +1437,13 @@ function getVolume(data) {
 	volume.value = lines.length;
 	volume.units = "lines";
 	return volume;
+}
+
+/*
+ * Function change units: change units in series name after reduction (e.g.: sec to hours or days)
+ * Replace (*) to (units).
+ */
+function changeUnits(name, units){
+	var str = name.replace(/\(\w*\)/i,"("+units+")");
+	return str;
 }
