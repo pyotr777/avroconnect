@@ -25,34 +25,16 @@
 <tr><td>Количество процессорочасов(ядра*часы):</td><td><<core_hours:  >></td></tr>
 </table>
 <br><br>
-<!--div class='div_req'><_re quest id="full_cpu_request" file="analyze_graph_cpu_tpl8~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред,макс,мин" chart="column" color="bright"  theme="yes" title="Загрузка процессора в %"  /></div-->
 <div class='toggable'><request id="cpu_request" file="analyze_graph_cpu_tpl8~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред,макс,мин" chart="line" color="bright" theme="yes" title="Загрузка процессора в %" step="true"  /></div>
 <div class='toggable'><request id="cpu_flops_request" file="analyze_graph_cpu_flops_tpl8~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред,макс,мин" chart="line" color="bright" theme="yes" title=" Количество операций с плавающей точкой в секунду" step="true"  /></div>
+
+<div class='toggable'><request id="cpu_l1_request" file="analyze_graph_cpu_l1~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред,макс,мин" chart="line" color="bright" theme="yes" title=" Количество кэш-промахов L1 в секунду" step="true"  /></div>
 <div class='toggable'><request id="cpu_cache_l2_lines_in_request" file="analyze_graph_cpu_cache_l2_lines_in_tpl8~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред,макс,мин" chart="line" color="bright" theme="yes" title=" Количество кэш-промахов L2 в секунду" step="true"  /></div>
-<div class='toggable'><request id="eth_request" file="analyze_graph_eth_tpl8~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред_перед,макс_перед,мин_перед,сред_получ,макс_получ,мин_получ" chart="line" color="bright" theme="yes" title="Скорость передачи данных по сети Ethernet (байт/сек)" step="true" /></div>
-<!-- XXX COCTIC <div class='div_req'>
-<table width=100%><tr>
-<td width=50%><re quest id="rcv_pack_eth_request" file="analyze_graph_ext_eth_packets_in~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред,макс,мин" chart="line" color="bright" title="Число полученных пакетов по сети Ethernet"  /></td>
-<td width=50%><re quest id="xmit_pack_eth_request" file="analyze_graph_ext_eth_packets_out~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред,макс,мин" chart="line" color="bright" theme="yes" title="Число переданных пакетов по сети Ethernet"  /></td>
-</tr></table>
-</div> -->
-<div class='toggable'><request id="ib_request" file="analyze_graph_ib_tpl8~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред_получ,макс_получ,мин_получ,сред_перед,макс_перед,мин_перед" chart="line" color="bright" theme="yes" title="Скорость передачи данных по сети Infiniband (байт/сек)" step="true" /></div>
-<!-- XXX COCTIC <div class='div_req'>
-<table width=100%><tr>
-<td width=50%><re quest id="rcv_pack_ib_request" file="analyze_graph_ext_ib_packets_in~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред,макс,мин" chart="line" color="bright" theme="yes" title="Число полученных пакетов по сети Infiniband"  /></td>
-<td width=50%><re quest id="xmit_pack_ib_request" file="analyze_graph_ext_ib_packets_out~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред,макс,мин" chart="line" color="bright" theme="yes" title="Число переданных пакетов по сети Infiniband"  /></td>
-</tr></table>
-</div> -->
-
-
-<div class='toggable'><request id="disk_bytes_request" file="analyze_graph_disk_bytes_tpl8~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред_получ,макс_получ,мин_получ,сред_перед,макс_перед,мин_перед" chart="line" color="bright" theme="yes" title="Скорость обмена данными с диском (байт/сек)" step="true" /></div>
-<div class='toggable'><request id="disk_ops_request" file="analyze_graph_disk_ops_tpl8~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред_получ,макс_получ,мин_получ,сред_перед,макс_перед,мин_перед" chart="line" color="bright" theme="yes" title="Скорость обмена данными с диском (операций/сек)" step="true" /></div>
-
+<div class='toggable'><request id="cpu_llc_request" file="analyze_graph_cpu_llc~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред,макс,мин" chart="line" color="bright" theme="yes" title=" Количество промахов в кэш последнего уровня в секунду" step="true"  /></div>
 
 <div class='toggable'><request id="loadavg_request" file="analyze_graph_ext_la~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред_loadavg,макс_loadavg,мин_loadavg" chart="line" theme="yes" color="bright" title="Значение LoadAvg" step="true" /></div>
 
 <!-- <div class='div_req'><re quest id="mem_request" file="analyze_graph_mem_tpl8~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред,макс,мин" chart="line" theme="yes" color="bright" title="Объем сводобной памяти (байт)" /></div> -->
-<div class='toggable'><request id="swap_request" file="analyze_graph_swap_tpl8~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="мин,сред,макс" chart="line" color="bright" theme="yes" title="Объем используемой своп-памяти (байт)" step="true" /></div>
 <!-- <div class='div_req'><re quest id="eth_err_request" file="analyze_graph_ext_eth_err~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред_получ,макс_получ,мин_получ,сред_перед,макс_перед,мин_перед" chart="line" theme="yes" color="bright" title="Число ошибок в сети Ethernet (ошибок/сек)" /></div> -->
 <!-- <div class='div_req'><re quest id="eth_drop_err_request" file="analyze_graph_ext_eth_drop~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред_получ,макс_получ,мин_получ,сред_перед,макс_перед,мин_перед" chart="line" theme="yes" color="bright" title="Число сброшенных пакетов в сети Ethernet (пакетов/сек)" /></div> -->
 <!-- <div class='div_req'><re quest id="ib_err_request" file="analyze_graph_ext_ib_err~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред_получ,макс_получ,мин_получ,сред_перед,макс_перед,мин_перед" chart="line" theme="yes" color="bright" title="Число ошибок в сети Infiniband (ошибок/сек)" /></div> -->

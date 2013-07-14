@@ -1,7 +1,7 @@
 pigquery = %default cf 'tasks_<<sys:gra>>'
 %default ntop <<top:15>>
-%default fstart_time 1325376000000L
-%default fend_time <<today>>L
+%default fstart_time <<start:1325376000000>>L
+%default fend_time <<end:today>>L
 %default ftp 'tstart'
 %default resp 'avgncpus'
 %default resdir '/does/not/exist'

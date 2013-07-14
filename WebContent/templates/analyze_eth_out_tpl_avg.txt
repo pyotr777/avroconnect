@@ -4,7 +4,7 @@ final
  yield val => (sum(c.speed)/(1024*1024)) / count(c.speed)
 end
 
-print(order=val) flow1
+print(raw) flow1
 
 columns = val_num
 

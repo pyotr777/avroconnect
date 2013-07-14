@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+<title><<date: >> Статистика запусков задач пользователей СКЦ МГУ</title>
+<script type="text/javascript" src="/avroconnect/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/avroconnect/js/highcharts.js"></script>
+<script type="text/javascript" src="/avroconnect/js/report_lib.js"></script>
+<script type="text/javascript" src="/avroconnect/js/report.js"></script>
+<script type="text/javascript" src="/avroconnect/js/custom_functions.js"></script>
+<link rel="stylesheet" type="text/css" href="/avroconnect/css/styles.css">
+</head>
+<body>
+<h1>Статистика запусков задач пользователей СКЦ МГУ <<date: >></h1>
+<div id="messages"></div>
+
+
+
+<h3>Распределение среднего времени ожидания по очередям с начала года</h3>
+<div class="toggable">
+  <request id="10c" file="avgwaittime~sys_cheb!start_1357026288000" chart="column" title="Average waittime in queue on Chebyshev since 01.01.2013" stacking="normal" color="cheb" vaxis="waittime (sec)" baseURL="http://spreadsheets.google.com/tq?tqx=out:html&key=0Aq-sgeVXult3dHJVM1VkM0VhWldGN2NBcU0xcWdXeFE" descr="true" source="txt"></request>
+  
+  <request id="10l" file="avgwaittime~sys_lom!start_1357026288000" chart="column" title="Average waittime in queue on Lomonosov since 01.01.2013" stacking="normal" color="lom" vaxis="waittime (sec)" descr="true" source="txt"></request>
+
+</div>
+<p></p>
+</body>
+</html>

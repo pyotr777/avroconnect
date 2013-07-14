@@ -604,7 +604,7 @@ public class MakeReport extends HttpServlet {
 				} 
 				if (pars.length > 1) {
 // Replace placeholder with default value
-					str = str.replaceFirst(m.group(0), pars[1]);
+					str = str.replaceFirst(m.group(0), replaceTodayPlaceholder(pars[1]));
 				}
 				else {
 // Search for <<today>> placeholder and replace if found

@@ -1,0 +1,10 @@
+pigquery = 
+
+flow1 = each c in cpu_user where c.time > 1365400000000000 and c.time < 1365402000000000 and c.node ins('node-03-09,node-09-07,node-40-16,node-96-25') and c.n > 0 and c.n < 9
+ yield time => int(c.time/1000), node => c.node, index => int(c.n-1), cpu_user => c.value
+end
+print(order=time,node,index,cpu_user) flow1
+
+
+columns = thetime_datetime, node_text, index_num, cpu_num
+

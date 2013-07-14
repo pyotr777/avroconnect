@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+<title><<date: >> Статистика запусков задач пользователей СКЦ МГУ</title>
+<script type="text/javascript" src="/avroconnect/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/avroconnect/js/highcharts.js"></script>
+<script type="text/javascript" src="/avroconnect/js/report_lib.js"></script>
+<script type="text/javascript" src="/avroconnect/js/report.js"></script>
+<script type="text/javascript" src="/avroconnect/js/custom_functions.js"></script>
+<link rel="stylesheet" type="text/css" href="/avroconnect/css/styles.css">
+</head>
+<body>
+<h1>Статистика запусков задач пользователей СКЦ МГУ на <<enddate:today>>. Годовая статистика исчисляется с <<startdate:1325376000000>>*</h1>
+<h3>* время в миллисекундах с 1.1.1970 00:00. Часовые пояса не учитываются.</h3>
+<div id="messages"></div>
+<h3>Периоды отсутствия данных</h3>
+<div class="toggable">  
+  <request id="0c" file="empty_data~sys_cheb!start_<<startdate:1325376000000>>!end_<<enddate:today>>" chart="column" title="No log data periods on Chebyshev" stacking="normal" color="cheb" vaxis="no data period length (sec)" baseURL="http://spreadsheets.google.com/tq?tqx=out:html&key=0Aq-sgeVXult3dHJVM1VkM0VhWldGN2NBcU0xcWdXeFE" descr="true" source="txt"></request>
+
+</div>
+
+<p></p>
+</body>
+</html>

@@ -4,7 +4,7 @@ final
  yield val => sum(c.value) / count(c.value)
 end
 
-print(order=val) flow1
+print(raw) flow1
 
 columns = val_num
 

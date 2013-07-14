@@ -1,12 +1,12 @@
 pigquery =
-flow1 = group c by int(c.time/(<<interval>>*1000000)) in graph_disk_ops_in where c.n != 0 and c.time > <<start:0>> and c.time < <<end:0>> and ( <<nodes:none>> )
+flow1 = group c by int(c.time/(<<interval>>*1000000)) in disk_ops_in where c.n != 0 and c.time > <<start:0>> and c.time < <<end:0>> and ( <<nodes:none>> )
 final
  yield time => int(c.time/1000), val => sum(c.value) / count(c.value), index => 1
  yield time => int(c.time/1000), val => max(c.value), index => 2
  yield time => int(c.time/1000), val => min(c.value), index => 3
 end
 
-flow2 = group c by int(c.time/(<<interval>>*1000000)) in graph_disk_ops_out where c.n != 0 and c.time > <<start:0>> and c.time < <<end:0>> and ( <<nodes:none>> )
+flow2 = group c by int(c.time/(<<interval>>*1000000)) in disk_ops_out where c.n != 0 and c.time > <<start:0>> and c.time < <<end:0>> and ( <<nodes:none>> )
 final
  yield time => int(c.time/1000), val => sum(c.value) / count(c.value), index => 4
  yield time => int(c.time/1000), val => max(c.value), index => 5
