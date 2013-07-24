@@ -1,7 +1,7 @@
 pigquery = %default cf 'tasks_<<sys:gra>>'
 %default period 86400
 %default fstart_time <<start:1325376000000>>L
-%default fend_time <<today>>L
+%default fend_time <<end:today>>L
 %default ftp1 'tqueued'
 %default ftp2 'tstart'
 %default resdir '/does/not/exist'
@@ -32,4 +32,4 @@ STORE dqusers INTO '$resdir' USING PigStorage(',');
 
 columns= queue, day_date, nqusers_num_users
 
-googlequery=select month(day), avg(nqusers) group by month(day) pivot queue
+googlequery=select dayOfWeek(day), avg(nqusers) group by dayOfWeek(day) pivot queue

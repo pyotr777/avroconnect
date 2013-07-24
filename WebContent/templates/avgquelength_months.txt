@@ -1,6 +1,6 @@
 pigquery=%default cf 'tasks_<<sys:gra>>'
 %default fstart_time <<start:1325376000000>>L
-%default fend_time <<end:today>>L
+%default fend_time <<today>>L
 /* 4 days lag */
 %default max_lag 259200L
 %default resdir 'does/not/exist'

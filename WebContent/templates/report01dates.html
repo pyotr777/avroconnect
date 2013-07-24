@@ -36,10 +36,10 @@
 
 <h3>Распределение среднего времени ожидания по очередям с <<startdatehm:01.01.2012>> по <<enddatehm:31.12.2012>></h3>
 <div class="toggable">
-  <request id="10c" file="avgwaittime~sys_cheb!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="column" 
+  <request id="10c" file="dates-avgwaittime~sys_cheb!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="column" 
   		title="Average waittime in queue on Chebyshev from <<startdatehm:01.01.2012>> to <<enddatehm:31.12.2012>>" stacking="normal" color="cheb" vaxis="waittime (sec)" descr="true" source="txt"></request>
         
-  <request id="10l" file="avgwaittime~sys_lom!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="column" 
+  <request id="10l" file="dates-avgwaittime~sys_lom!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="column" 
   		title="Average waittime in queue on Lomonosov from <<startdatehm:01.01.2012>> to <<enddatehm:31.12.2012>>" stacking="normal" color="lom" vaxis="waittime (sec)" descr="true" source="txt"></request>
 
 </div>
@@ -65,10 +65,10 @@
 <h3>Распределение числа задач ожидающих исполнения по месяцам с <<startdatehm:01.01.2012>> по <<enddatehm:31.12.2012>></h3>
 <div class="toggable">
 
-  <request id="15c" file="avgquelength_months~sys_cheb!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="column" 
+  <request id="15c" file="dates-avgquelength_months~sys_cheb!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="column" 
   		title="Month average queue length on Chebyshev from <<startdatehm:01.01.2012>> to <<enddatehm:31.12.2012>>" stacking="normal" color="cheb" vaxis="jobs" source="txt" descr="true"></request>
         
-  <request id="15l" file="avgquelength_months~sys_lom!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="column" 
+  <request id="15l" file="dates-avgquelength_months~sys_lom!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="column" 
   		title="Month average queue length on Lomonosov from <<startdatehm:01.01.2012>> to <<enddatehm:31.12.2012>>" stacking="normal" color="lom" vaxis="jobs" source="txt" descr="true"></request>
 </div>
 
@@ -76,19 +76,19 @@
 
 <div class="toggable">
 
-  <request id="17c" file="avg_queue_length_weekdays_year~sys_cheb!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="column" 
+  <request id="17c" file="dates-avg_queue_length_weekdays_year~sys_cheb!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="column" 
   		title="Weekday average queue length on Chebyshev from <<startdatehm:01.01.2012>> to <<enddatehm:31.12.2012>>" stacking="normal" color="cheb" vaxis="jobs" source="txt" descr="true"></request>
         
-  <request id="17l" file="avg_queue_length_weekdays_year~sys_lom!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="column" 
+  <request id="17l" file="dates-avg_queue_length_weekdays_year~sys_lom!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="column" 
   		title="Weekday average queue length on Lomonosov from <<startdatehm:01.01.2012>> to <<enddatehm:31.12.2012>>" stacking="normal" color="lom" vaxis="jobs" source="txt" descr="true"></request>
 </div>
 
 <h3>Распределение числа задач ожидающих исполнения по времени суток с <<startdatehm:01.01.2012>> по <<enddatehm:31.12.2012>></h3>
 <div class="toggable">
-    <request id="18c" file="avg_queue_length_hours_year~sys_cheb!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="column" 
+    <request id="18c" file="dates-avg_queue_length_hours_year~sys_cheb!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="column" 
     		title="Average number of jobs queued in a given hour of the day for each queue on Chebyshev from <<startdatehm:01.01.2012>> to <<enddatehm:31.12.2012>>" stacking="normal" color="cheb" vaxis="jobs" source="txt" descr="true"></request>
             
-    <request id="18l" file="avg_queue_length_hours_year~sys_lom!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="column" 
+    <request id="18l" file="dates-avg_queue_length_hours_year~sys_lom!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="column" 
     		title="Average number of jobs queued in a given hour of the day for each queue on Lomonosov from <<startdatehm:01.01.2012>> to <<enddatehm:31.12.2012>>" stacking="normal" color="lom" vaxis="jobs" source="txt" descr="true"></request>
 </div>
 
@@ -142,20 +142,20 @@
 
 <h3>3.1.4a Распределение числа уникальных пользователей, запустивших или поставивших в очередь задачи, по месяцам с <<startdatehm:01.01.2012>> по <<enddatehm:31.12.2012>></h3>
 <div class="toggable">
-  <request id="314ac" file="users_queueorrunning_month~sys_cheb!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="column" 
+  <request id="314ac" file="dates-users_queueorrunning_month~sys_cheb!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="column" 
   		title="Number of users running or queueing jobs on Chebyshev per month from <<startdatehm:01.01.2012>> to <<enddatehm:31.12.2012>>" color="cheb" source="txt" descr="true"></request>
         
-  <request id="314al" file="users_queueorrunning_month~sys_lom!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="column" 
+  <request id="314al" file="dates-users_queueorrunning_month~sys_lom!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="column" 
   		title="Number of users running or queueing jobs on Lomonosov per month from <<startdatehm:01.01.2012>> to <<enddatehm:31.12.2012>>" color="lom" source="txt" descr="true"></request>
  
 </div>
 
 <h3>3.1.5a Распределение числа уникальных пользователей, запустивших или поставивших в очередь задачи, по дням недели с <<startdatehm:01.01.2012>> по <<enddatehm:31.12.2012>></h3>
 <div class="toggable">
-  <request id="315ac" file="users_queueorrunning_weekdays~sys_cheb!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="column" 
+  <request id="315ac" file="dates-users_queueorrunning_weekdays~sys_cheb!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="column" 
   		title="Number of users running or queueing jobs on Chebyshev per week days from <<startdatehm:01.01.2012>> to <<enddatehm:31.12.2012>>" color="cheb" source="txt" descr="true"></request>
         
-  <request id="315al" file="users_queueorrunning_weekdays~sys_lom!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="column" 
+  <request id="315al" file="dates-users_queueorrunning_weekdays~sys_lom!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="column" 
   		title="Number of users running or queueing jobs on Lomonosov per week days from <<startdatehm:01.01.2012>> to <<enddatehm:31.12.2012>>" color="lom" source="txt" descr="true"></request>
   
 </div>
@@ -236,10 +236,10 @@
 
 <h3>по среднему числу процессоров с <<startdatehm:01.01.2012>> по <<enddatehm:31.12.2012>></h3>
 <div class="toggable">
-  <request id="29c" file="top_users_avgcpus~sys_cheb!top_15!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="bar" 
+  <request id="29c" file="dates-top_users_avgcpus~sys_cheb!top_15!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="bar" 
   		title="Top 15 users by average number of CPUs number on Chebyshev from <<startdatehm:01.01.2012>> to <<enddatehm:31.12.2012>>" color="cheb" logScale="true" source="txt" descr="true" ></request>
         
-  <request id="29l" file="top_users_avgcpus~sys_lom!top_15!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="bar" 
+  <request id="29l" file="dates-top_users_avgcpus~sys_lom!top_15!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="bar" 
   		title="Top 15 users by average number of CPUs number on Lomonosov from <<startdatehm:01.01.2012>> to <<enddatehm:31.12.2012>>" color="lom" logScale="true" source="txt" descr="true" ></request>
   
 </div>

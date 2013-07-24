@@ -15,10 +15,13 @@
 <h1>Статистика запусков задач пользователей СКЦ МГУ на <<enddate:today>>. Годовая статистика исчисляется с <<startdate:1325376000000>>*</h1>
 <h3>* время в миллисекундах с 1.1.1970 00:00. Часовые пояса не учитываются.</h3>
 <div id="messages"></div>
-<h3>Периоды отсутствия данных</h3>
-<div class="toggable">  
-  <request id="0c" file="empty_data~sys_cheb!start_<<startdate:1325376000000>>!end_<<enddate:today>>" chart="column" title="No log data periods on Chebyshev" stacking="normal" color="cheb" vaxis="no data period length (sec)" baseURL="http://spreadsheets.google.com/tq?tqx=out:html&key=0Aq-sgeVXult3dHJVM1VkM0VhWldGN2NBcU0xcWdXeFE" descr="true" source="txt"></request>
 
+<div class="toggable">  
+
+
+
+<request id="10c" file="dates-avgwaittime~sys_cheb!start_<<startdate:1325376000000>>!end_<<enddate:1356998399000>>" chart="column" 
+  		title="Average waittime in queue on Chebyshev from <<startdatehm:01.01.2012>> to <<enddatehm:31.12.2012>>" stacking="normal" color="cheb" vaxis="waittime (sec)" descr="true" source="txt" baseURL="http://spreadsheets.google.com/tq?tqx=out:html&key=0Aq-sgeVXult3dHJVM1VkM0VhWldGN2NBcU0xcWdXeFE"></request>
 </div>
 
 <p></p>

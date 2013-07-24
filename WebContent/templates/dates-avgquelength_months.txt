@@ -1,11 +1,10 @@
 pigquery=%default cf 'tasks_<<sys:gra>>'
 %default fstart_time <<start:1325376000000>>L
-%default fend_time <<today>>L
-/* 4 day lag */
+%default fend_time <<end:today>>L
+/* 4 days lag */
 %default max_lag 259200L
 %default resdir 'does/not/exist'
-%default period 3600
-%default wrap 24
+%default period 86400
 REGISTER hopsa-udfs.jar;
 DEFINE SDATERANGES hopsa.udfs.SDATERANGES;
 tsr = LOAD 'cassandra://hopsa/$cf' USING CassandraStorage() AS (k:bytearray,
@@ -37,13 +36,10 @@ ranges1 = FOREACH tsf GENERATE key, queue, SDATERANGES(tqueued, waittime, $perio
 ranges = FOREACH ranges1 GENERATE key, queue, FLATTEN(intervals) AS
 			  (start : long, length : long);
 rangeGroups = GROUP ranges BY (queue, start - start % $period);
-avgHourTimes = FOREACH rangeGroups GENERATE group.$0 AS queue, group.$1 /
-	$period AS hour, SUM(ranges.length) / (double)$period AS avglength;
-hourGroups = GROUP avgHourTimes BY (queue, hour % $wrap);
-avgtimes = FOREACH hourGroups GENERATE group.$0 AS queue, group.$1 AS
-	hour_of_day, AVG(avgHourTimes.avglength) AS avglength;
+avgtimes = FOREACH rangeGroups GENERATE group.$0 AS queue, group.$1 * 1000 AS day,
+	SUM(ranges.length) / (double)$period AS	avglength;
 STORE avgtimes INTO '$resdir' USING PigStorage(',');
 
-columns=queue, hour_num, avglength_num_jobs
+columns=queue, day_date, avglength_num
 
-googlequery=select hour, avg(avglength) group by hour pivot queue
+googlequery=select month(day), avg(avglength) group by month(day) pivot queue
