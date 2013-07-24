@@ -99,19 +99,19 @@
 <div class='toggable'><request id="cpu_flops_request" file="analyze_cpu_flops_tpl8~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред,макс,мин" chart="line" color="bright" title=" Количество операций с плавающей точкой в секунду" step="true"  /></div>
 <div class='toggable'><request id="cpu_cache_l2_lines_in_request" file="analyze_cpu_cache_l2_lines_in_tpl8~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред,макс,мин" chart="line" color="bright" title=" Количество кэш-промахов L2 в секунду" step="true"  /></div>
 <div class='toggable'><request id="eth_request" file="analyze_eth_tpl8~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред_перед,макс_перед,мин_перед,сред_получ,макс_получ,мин_получ" chart="line" color="bright" title="Скорость передачи данных по сети Ethernet (байт/сек)" step="true" /></div>
-<!-- XXX COCTIC <div class='div_req'>
-<table width=100%><tr>
-<td width=50%><re quest id="rcv_pack_eth_request" file="analyze_ext_eth_packets_in~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред,макс,мин" chart="line" color="bright" title="Число полученных пакетов по сети Ethernet"  /></td>
-<td width=50%><re quest id="xmit_pack_eth_request" file="analyze_ext_eth_packets_out~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред,макс,мин" chart="line" color="bright" title="Число переданных пакетов по сети Ethernet"  /></td>
-</tr></table>
-</div> -->
+<div class='div_req'>
+<request id="rcv_pack_eth_request" file="analyze_ext_eth_packets_in~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред,макс,мин" chart="line" color="bright" title="Число полученных пакетов по сети Ethernet"  />
+</div>
+<div class='div_req'>
+<request id="xmit_pack_eth_request" file="analyze_ext_eth_packets_out~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред,макс,мин" chart="line" color="bright" title="Число переданных пакетов по сети Ethernet"  />
+</div>
 <div class='toggable'><request id="ib_request" file="analyze_ib_tpl8~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред_получ,макс_получ,мин_получ,сред_перед,макс_перед,мин_перед" chart="line" color="bright" title="Скорость передачи данных по сети Infiniband (байт/сек)" step="true" /></div>
-<!-- XXX COCTIC <div class='div_req'>
-<table width=100%><tr>
-<td width=50%><re quest id="rcv_pack_ib_request" file="analyze_ext_ib_packets_in~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред,макс,мин" chart="line" color="bright" title="Число полученных пакетов по сети Infiniband"  /></td>
-<td width=50%><re quest id="xmit_pack_ib_request" file="analyze_ext_ib_packets_out~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред,макс,мин" chart="line" color="bright" title="Число переданных пакетов по сети Infiniband"  /></td>
-</tr></table>
-</div> -->
+<div class='div_req'>
+<request id="rcv_pack_ib_request" file="analyze_ext_ib_packets_in~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред,макс,мин" chart="line" color="bright" title="Число полученных пакетов по сети Infiniband"  />
+</div>
+<div class='div_req'>
+<request id="xmit_pack_ib_request" file="analyze_ext_ib_packets_out~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред,макс,мин" chart="line" color="bright" title="Число переданных пакетов по сети Infiniband"  />
+</div>
 
 
 <div class='toggable'><request id="disk_bytes_request" file="analyze_disk_bytes_tpl8~start_0!thenodeslist_none!end_0!nodes_none" indexed="true" names="сред_получ,макс_получ,мин_получ,сред_перед,макс_перед,мин_перед" chart="line" color="bright" title="Скорость обмена данными с диском (байт/сек)" step="true" /></div>

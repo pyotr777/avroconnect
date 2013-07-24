@@ -9,5 +9,5 @@ end
 flow2 = sort x in flow1 by x.time
 print(zip;order=time,val,index) flow2
 
-columns = thetime_time, avgin_num, maxin_num, minin_num
+columns = thetime_datetime, avgin_num, maxin_num, minin_num
 

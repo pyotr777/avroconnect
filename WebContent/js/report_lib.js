@@ -1418,7 +1418,7 @@ function time4axis(time) {
 	//alert("offset: "+offset_minutes);
 	if (offset_minutes != 0) {
 		var correction = offset_minutes * 60 * 1000; // correction time in milliseconds
-		date = date - correction;
+		//date = date - correction;
 	}
 	return date;
 }
